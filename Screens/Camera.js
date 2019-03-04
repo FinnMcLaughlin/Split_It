@@ -15,12 +15,12 @@ import firebase from '@firebase/app';
 var AWS = require('aws-sdk/react-native');
 
 AWS.config.region = 'eu-west-1';
-AWS.config.accessKeyId = 'AKIAJPUHL5EV23SAPEEA';
-AWS.config.secretAccessKey = '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';
+
 
 export default class Camera extends Component<Props>{
     static NavigationOptions = {
         title: 'Camera',
+        headerBackTitle: 'Home'
       };
     
     constructor(props)
@@ -31,7 +31,7 @@ export default class Camera extends Component<Props>{
     _TakePicture =  async function() {
         if (this.camera) {
           
-          const options = { quality: 0.5, base64: true, skipProcessing: true };
+          const options = { quality: 100, base64: true, skipProcessing: true, width:400, height: 500};
           const data =  await this.camera.takePictureAsync(options)
           console.log("Raw Data", data);
 
@@ -48,7 +48,7 @@ export default class Camera extends Component<Props>{
             };
             
 
-            RNTesseractOcr.recognize(value, "LANG_ENGLISH", tessOptions)
+            RNTesseractOcr.recognize(params, "LANG_ENGLISH", tessOptions)
             .then((result) => {
               this.setState({ ocrResult: result });
               console.log("OCR Result: ", result);
