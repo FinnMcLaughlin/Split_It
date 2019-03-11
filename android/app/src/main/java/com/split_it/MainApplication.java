@@ -13,7 +13,6 @@ import com.fetchsky.RNTextDetector.RNTextDetectorPackage;
 import com.reactlibrary.RNTesseractOcrPackage;
 
 
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
+			new MainReactPackage(),
             new RNFetchBlobPackage(),
             new RNCameraPackage(),
 			new RNTextDetectorPackage(),

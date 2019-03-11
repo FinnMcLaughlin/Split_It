@@ -1,0 +1,3 @@
+# Referenced at C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\build\intermediates\manifests\full\debug\AndroidManifest.xml:44
+-keep class com.split_it.MainApplication { <init>(...); }
+

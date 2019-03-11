@@ -20,6 +20,7 @@ export default class Display extends Component<Props>{
         };
 
         let dis = this;
+        
         firebase.database().ref("Rooms/A001").on('value', function(snapshot){
             dis.setState({
                 data: snapshot.val().content, 
@@ -36,15 +37,10 @@ export default class Display extends Component<Props>{
             this.state.data = this.props.navigation.getParam("data", "dataless");
             this.state.initial_check = true;    
         }
-
-        var TotalPrice = (parseFloat(this.state.data.Pizza.Value) + parseFloat(this.state.data.Soda.Value)).toFixed(2);
-       
+      
         return(
         <View>
             <Text>The Results</Text>
-            <Text>Pizza: { JSON.stringify(this.state.data.Pizza.Value) }</Text> 
-            <Text>Soda: { JSON.stringify(this.state.data.Soda.Value) }</Text> 
-            <Text>Total: { TotalPrice }</Text>
         </View>
         )
     }

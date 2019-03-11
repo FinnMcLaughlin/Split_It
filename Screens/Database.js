@@ -84,6 +84,38 @@ export default class Database extends Component<Props>{
            Value: value
         });
     }
+
+    _UserChooseItem(id, itemIndex, username){
+        const _table = "Rooms/" + id + "/content/" + itemIndex + "/data";
+        
+        firebase.database().ref(_table + "/chosenBy").on('value', function(snapshot){
+            var existingData = snapshot.val();
+            var newData = [];
+            console.log("Existing Data: " + existingData)
+
+            if(!existingData.includes(username)){
+
+                if(existingData == ""){
+                    existingData = [`${username}`]
+                }
+                else{
+                    existingData.push(username);
+                }                
+                
+                firebase.database().ref(_table).update({
+                    chosenBy: existingData
+                })
+            }
+            else{
+                existingData[existingData.indexOf(username)] = "";
+
+                console.log("Updated: " + existingData)
+                // firebase.database().ref(_table).update({
+                //     chosenBy: existingData
+                // })
+            }
+          })    
+    }
 }
 
 AppRegistry.registerComponent('Database', () => Database);
