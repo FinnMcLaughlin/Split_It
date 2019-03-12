@@ -3,6 +3,7 @@
 import React, {Component} from 'react';
 import {AppRegistry, Platform, StyleSheet, Text, View, Button, TextInput} from 'react-native';
 import firebase from '@firebase/app';
+import '@firebase/auth';
 import Database from './Database';
 import Loading from './Loading';
 
@@ -16,27 +17,50 @@ export default class Home extends Component<Props>{
     constructor(props){
         super(props);
 
+        this.state = {
+            userAuthenticated: false,
+            userDisplayName: ""
+        }
+
         this.DB = new Database();
         this.Load = new Loading();
+    }
+
+    componentDidMount(){
+        //firebase.auth().onAuthStateChanged(user => {(user ? this.setState({ userAuthenticated: true, userDisplayName: this.DB._getCurrentUserDisplayName()}) : this.props.navigation.navigate("Login"))});
+        firebase.auth().onAuthStateChanged(user => {this.props.navigation.navigate(user ? "Results" : "Login")});
+    }
+  
+    _SignOutUser(){
+          const user = firebase.auth().currentUser.uid;
+  
+          firebase.auth().signOut()
+          .then( () => {console.log("Log Out", user)})
+          .catch( () => {console.log("Unable to sign out")})
     }
 
     _RoomIDGen(){
         const ID_chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         var newRoomID = "";
+        var idLength = 4;
 
         do{
             var randIndex = Math.floor(Math.random() * (ID_chars.length));
             newRoomID = newRoomID + ID_chars.charAt(randIndex);
         }
-        while(newRoomID.length < 4);
+        while(newRoomID.length < idLength);
 
         this.DB._newRoom(newRoomID)
     }
 
     render(){       
-        return(
+        return(!this.state.userAuthenticated ?
+            <View>
+                <Text>Authenticating User...</Text>
+            </View>
+            :
             <View style={styles.searchInput}>
-                <Text>Home</Text>
+                <Text>Welcome {this.state.userDisplayName}</Text>
                 <View style={styles.button_view}>
                 <Button 
                 title='Camera'

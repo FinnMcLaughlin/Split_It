@@ -18,12 +18,13 @@ export default class OCRResult extends Component<Props>{
 
         this.state = {
             data: [{ item: "", data: {price: "", chosenBy: [""]}}],
-            dataLoaded: false
+            dataLoaded: false,
+            userBillPrice: "11.40",
+            remainingTotalBillPrice: "16.40"
         }
 
         let dis = this;
-        firebase.database().ref("Rooms/T3ST/content").on('value', function(snapshot){
-            console.log(snapshot.val())
+        firebase.database().ref("Rooms/ZILP/content").on('value', function(snapshot){
             dis.setState({
                 data: snapshot.val(),
                 dataLoaded: true
@@ -31,30 +32,21 @@ export default class OCRResult extends Component<Props>{
         });
     }
     
-    _getUserEmail(){
-      console.log(firebase.auth().currentUser.email)
-    };
 
     _chooseItem(itemIndex){
-      // firebase.database().ref("Rooms/T3ST/content/" + itemIndex + "/data/chosenBy").on('value', function(snapshot){
-      //   console.log(snapshot.val())
-      // })
-
-      this.DB._UserChooseItem("T3ST", itemIndex, "Finn");
+      this.DB._UserChooseItem("ZILP", itemIndex, firebase.auth().currentUser.uid);
     }
 
     _renderChosenByInfo(chosen){
       var renderString = "";
       for(var chosenIndex=0; chosenIndex < chosen.length; chosenIndex++){
-        renderString = renderString + ", " + chosen[chosenIndex];
+        renderString = renderString + ", " + this.DB._getSpecificUserDisplayName(chosen[chosenIndex]);
       }
 
       return renderString.substring(2);
     }
 
     render(){
-      //this._getUserEmail()  
-
       var listData = [
         { item: "Po-ta-toes", data: {price: "€8.50", chosenBy: ["Finn"]}}
       ];
@@ -75,7 +67,7 @@ export default class OCRResult extends Component<Props>{
                       <Text style={styles.itemDataStyle}>{this._renderChosenByInfo(item.data.chosenBy)}</Text>                     
                     </View>
                     <View>
-                    <TouchableOpacity  onPress={() => {console.log("This item: " + item), this._chooseItem(index)}}><Text style={styles.itemDataStyle}>Choose</Text></TouchableOpacity>
+                      <TouchableOpacity  onPress={() => {console.log("This item: " + item), this._chooseItem(index)}}><Text style={styles.itemDataStyle}>Choose</Text></TouchableOpacity>
                       <Text style={styles.itemDataStyle}>Edit</Text>
                     </View>
                   </View>
@@ -84,14 +76,13 @@ export default class OCRResult extends Component<Props>{
             />
           </ScrollView>
           <View style={styles.footerStyle}>
-            <Text style={styles.footerTextStyle}>Bill Total:</Text>
-            <Text style={styles.footerTextStyle}>Your Total:</Text>
+            <Text style={styles.footerTextStyle}>Your Total: {this.state.userBillPrice}</Text>
+            <Text style={styles.footerTextStyle}>Remaining: {this.state.remainingTotalBillPrice}</Text>
           </View>  
         </View>    
       )
     }
 }
-// <TouchableOpacity  onPress={() => {console.log("This item: " + item), this._chooseItem(index)}}><Text style={styles.itemDataStyle}>Choose</Text></TouchableOpacity> 
 
 const styles = StyleSheet.create({
     warningStyle: {
@@ -123,18 +114,6 @@ const styles = StyleSheet.create({
   });
 
 /*
-<FlatList data={[
-          {key: 'Finn'},
-          {key: 'Barry B Benson'},
-          {key: 'Finn'},
-          {key: 'Finn'},
-          {key: 'Finn'},
-          {key: 'Finn'},
-          {key: 'Finn'}
-        ]}
-        renderItem={({item}) => <Text style={styles.warningStyle}>{item.key}</Text>}
-
-
 <View style={{flex: 1}}>
   <ScrollView>
     <SectionList

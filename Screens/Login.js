@@ -38,7 +38,7 @@ export default class Login extends Component{
                 onChangeText = {(password) => this.setState({password})} value={this.state.password}/>
                 <View style={styles.button_style}>
                     <Button styles={styles.button_style} title='Login' 
-                    onPress={() => {this._LoginUser("finnmclaughlin2@gmail.com", "DimiDink2")}}/>
+                    onPress={() => {this._LoginUser("finnmclaughlin2@gmail.com", "Kevisarat")}}/>
                 </View>
                 <View style={styles.button_style}>
                     <Button styles={styles.button_style} title='Register' 

@@ -3,6 +3,7 @@
 import React, {Component} from 'react';
 import {AppRegistry, Platform, StyleSheet, Text, View} from 'react-native';
 import firebase from '@firebase/app';
+import '@firebase/auth';
 
 var config = {
     apiKey: "AIzaSyBY7NjjYQ9tHYwCOu-ilMZaG4BZsbuI9V4",
@@ -85,36 +86,73 @@ export default class Database extends Component<Props>{
         });
     }
 
+    _getCurrentUserDisplayName(){
+        var userID = firebase.auth().currentUser.uid;
+        const _table = "Users/" + userID;
+        var userDisplayName = firebase.auth().currentUser.displayName;
+
+        if(userDisplayName == null){
+            firebase.database().ref(_table).on('value', function(snapshot){
+                firebase.auth().currentUser.updateProfile({displayName: snapshot.val().name});
+            });
+
+            userDisplayName = firebase.auth().currentUser.displayName;
+            return userDisplayName;
+        }
+        else{
+            return userDisplayName;
+        }   
+    }
+
+    _getSpecificUserDisplayName(userID){
+        const _table = "Users/" + userID;
+        var userName = "";
+
+        firebase.database().ref(_table).on('value', function(snapshot){
+            if(snapshot.val().name != undefined){
+                userName = snapshot.val().name;
+            }
+        });       
+        
+        return userName;
+    }
+
     _UserChooseItem(id, itemIndex, username){
         const _table = "Rooms/" + id + "/content/" + itemIndex + "/data";
-        
+        var existingData = [];
+
         firebase.database().ref(_table + "/chosenBy").on('value', function(snapshot){
-            var existingData = snapshot.val();
-            var newData = [];
-            console.log("Existing Data: " + existingData)
+            existingData = snapshot.val();     
+        });
 
-            if(!existingData.includes(username)){
-
-                if(existingData == ""){
-                    existingData = [`${username}`]
-                }
-                else{
-                    existingData.push(username);
-                }                
-                
-                firebase.database().ref(_table).update({
-                    chosenBy: existingData
-                })
+        console.log("Existing Data: " + existingData + " " + new Date())
+        
+        if(!existingData.includes(username)){
+            if(existingData == ""){
+                existingData = [`${username}`]
+            }
+            else{
+                existingData.push(username);
+            }                
+            
+            console.log("Added: " + existingData)
+            firebase.database().ref(_table).update({
+                chosenBy: existingData
+            });
+        }
+        else if(existingData.includes(username)){
+            if(existingData.length > 1){
+                existingData.splice(existingData.indexOf(username), 1);
             }
             else{
                 existingData[existingData.indexOf(username)] = "";
-
-                console.log("Updated: " + existingData)
-                // firebase.database().ref(_table).update({
-                //     chosenBy: existingData
-                // })
             }
-          })    
+
+            console.log("Updated: " + existingData)
+            firebase.database().ref(_table).update({
+                chosenBy: existingData
+            })
+        }
     }
 }
 

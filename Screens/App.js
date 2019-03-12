@@ -15,10 +15,10 @@ import { NativeScreen } from 'react-native-screens';
 console.disableYellowBox = true;
 
 const navigate = createStackNavigator({
+  Home: { screen: Home },
   Loading: { screen : Loading },
   Login: { screen : Login },
   Register: { screen : Register }, 
-  Home: { screen: Home },
   Camera: { screen: Camera },
   Results: { screen: OCRResult},
   Display: { screen: Display },

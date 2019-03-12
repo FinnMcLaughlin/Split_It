@@ -29,6 +29,7 @@ export default class Register extends Component{
         console.log("Email", email);
         firebase.auth().createUserWithEmailAndPassword(email, password)
         .then(() => {
+            firebase.auth().currentUser.updateProfile({displayName: name});
             const uid = firebase.auth().currentUser.uid;
             this.DB._newUser(uid, email, name);
             this.props.navigation.navigate("Home"), 
