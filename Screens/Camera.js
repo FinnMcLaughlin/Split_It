@@ -17,7 +17,6 @@ var AWS = require('aws-sdk/react-native');
 
 AWS.config.region = 'eu-west-1';
 
-
 function formatOCROutput(data){
   let TD = data.TextDetections;
   var numCheck = /(?:\d+)?\.\d+/;///\d+\.\d+/; //Checks for Floating Number

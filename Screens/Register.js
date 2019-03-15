@@ -25,30 +25,23 @@ export default class Register extends Component{
         this.DB = new Database();
     }
 
-    _RegisterUser(email, password, name){
-        console.log("Email", email);
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then(() => {
-            firebase.auth().currentUser.updateProfile({displayName: name});
-            const uid = firebase.auth().currentUser.uid;
-            this.DB._newUser(uid, email, name);
-            this.props.navigation.navigate("Home"), 
-            console.log("Success")})
+    _newUser(email, password, name){
+        this.DB._RegisterUser(email, password, name);
     }
 
     render(){
         return(
             <View style={styles.view_style}>
-            <TextInput style={styles.textInputBox}
+            <TextInput style={styles.textInputBox} onFocus={() => this.setState({name: ""})}
             onChangeText = {(name) => this.setState({name})} value= {this.state.name}/>
-            <TextInput style={styles.textInputBox}
+            <TextInput style={styles.textInputBox} onFocus={() => this.setState({email: ""})}
             onChangeText = {(email) => this.setState({email})} value={this.state.email}/>
-            <TextInput style={styles.textInputBox}
+            <TextInput style={styles.textInputBox} onFocus={() => this.setState({password: ""})}
             onChangeText = {(password) => this.setState({password})} value={this.state.password}/>
             <Button styles={styles.button_style} title='Go' 
-            onPress={() => {this._RegisterUser(this.state.email, this.state.password, this.state.name)}}/>
+            onPress={() => {this._newUser(this.state.email, this.state.password, this.state.name)}}/>
            </View>
-        )
+        );
     }
 }
 

@@ -17,10 +17,14 @@ export default class OCRResult extends Component<Props>{
         this.DB = new Database();
 
         this.state = {
-            data: [{ item: "", data: {price: "", chosenBy: [""]}}],
+            userID: firebase.auth().currentUser.uid,
+            data: [{ item: "", data: {price: "", chosenBy: [""]} }],
             dataLoaded: false,
-            userBillPrice: "11.40",
-            remainingTotalBillPrice: "16.40"
+            userBillPrice: 0.00,
+            remainingTotalBillPrice: 0.00,
+            totalPrice: 35.99,
+            setremainingBillCheck: false,
+            updateremainingBillLock: false
         }
 
         let dis = this;
@@ -29,16 +33,83 @@ export default class OCRResult extends Component<Props>{
                 data: snapshot.val(),
                 dataLoaded: true
             });
+
+            if(!dis.state.setremainingBillCheck){
+              console.log("Checked")
+              dis._calculateRemainingBillPrice(snapshot.val());
+              dis.state.setremainingBillCheck = true;
+            }
+            else{
+              dis._calculateUserBillPrice(snapshot.val());
+            }
+        });
+
+        firebase.database().ref("Rooms/ZILP/PriceValues").on('value', function(snapshot){
+          dis.setState({
+            remainingTotalBillPrice: snapshot.val().remainingBillPrice.toFixed(2)
+          })
         });
     }
     
+    _calculateRemainingBillPrice(items){
+      var totalRemainingValue = 0;
+
+      for(var itemIndex=0; itemIndex < items.length; itemIndex++){
+        var itemPrice = items[itemIndex].data.price;
+        
+        totalRemainingValue = totalRemainingValue + parseFloat(itemPrice.replace(/[^\d.-]/g, ''));
+      }      
+
+      if(this.state.totalPrice != totalRemainingValue){
+        alert("Total Bill Price: " + this.state.totalPrice + " does not equal Remaining Bill Total: " + this.state.remainingTotalBillPrice
+        + "\nPossible Incorrect Item Price(s)");
+      }
+      else{
+        this.DB._setRemainingPrice("ZILP", totalRemainingValue);
+
+        this.setState({
+          remainingTotalBillPrice: totalRemainingValue.toFixed(2)
+        });
+      }
+    }
+
+    _calculateUserBillPrice(items){
+      var previousUserBillPrice = this.state.userBillPrice;
+      var newUserBillPrice = 0;
+      var rejectItem = false;
+      
+      for(var itemIndex=0; itemIndex < items.length; itemIndex++){
+        var chosenByInfo = items[itemIndex].data.chosenBy;
+
+        if(chosenByInfo.includes(this.state.userID)){
+          var itemPrice = parseFloat(items[itemIndex].data.price.replace(/[^\d.-]/g, ''));
+          
+          newUserBillPrice = newUserBillPrice + ( itemPrice / items[itemIndex].data.chosenBy.length);
+        }   
+      }
+
+      this.setState({
+        userBillPrice: newUserBillPrice.toFixed(2),
+      });
+
+      if(previousUserBillPrice > newUserBillPrice){
+        rejectItem = true;
+        newUserBillPrice = previousUserBillPrice - newUserBillPrice;
+      }
+      else{
+        newUserBillPrice = newUserBillPrice - previousUserBillPrice;
+      }
+
+      this.DB._updateRemainingPrice("ZILP", newUserBillPrice, rejectItem)
+    }
 
     _chooseItem(itemIndex){
-      this.DB._UserChooseItem("ZILP", itemIndex, firebase.auth().currentUser.uid);
+      this.DB._UserChooseItem("ZILP", itemIndex, this.state.userID);
     }
 
     _renderChosenByInfo(chosen){
       var renderString = "";
+
       for(var chosenIndex=0; chosenIndex < chosen.length; chosenIndex++){
         renderString = renderString + ", " + this.DB._getSpecificUserDisplayName(chosen[chosenIndex]);
       }
