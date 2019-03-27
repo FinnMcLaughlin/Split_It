@@ -21,7 +21,7 @@ export default class Payment extends Component<Props>{
             <View style={styles.modalView}>
                 <View style={ styles.modalView }>
                     <WebView
-                        source={{uri: 'http://147.252.138.118:3005/', body: '{"amount": "5.99"}'}}
+                        source={{uri: 'https://perfect-moose-52.localtunnel.me/', method: 'POST'}}//'https://splitit.localtunnel.me/', method: 'POST', body: 'cat=himalayan&dog=pug&fish=shark'}}
                         
                         onNavigationStateChange = {data => {                          
                             console.log(data)

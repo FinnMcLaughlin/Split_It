@@ -12,32 +12,15 @@ export default class Display extends Component<Props>{
 
       constructor(props){
         super(props);
+      }
 
-        this.state = {
-            initial_check: false,
-            data: "",
-            D: 12
-        };
-
-        let dis = this;
         
-        firebase.database().ref("Rooms/A001").on('value', function(snapshot){
-            dis.setState({
-                data: snapshot.val().content, 
-            });
-
-            console.log("Updated", snapshot.val().content);
-        });
-    }
 
     
 
-        render(){
-        if(!this.state.initial_check){
-            this.state.data = this.props.navigation.getParam("data", "dataless");
-            this.state.initial_check = true;    
-        }
-      
+        render(){      
+        console.log(this.props.navigation.state.params)
+
         return(
         <View>
             <Text>The Results</Text>

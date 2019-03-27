@@ -6,12 +6,7 @@ import firebase from '@firebase/app';
 import '@firebase/auth';
 
 var config = {
-    apiKey: "AIzaSyBY7NjjYQ9tHYwCOu-ilMZaG4BZsbuI9V4",
-    authDomain: "splitit-21d20.firebaseapp.com",
-    databaseURL: "https://splitit-21d20.firebaseio.com",
-    projectId: "splitit-21d20",
-    storageBucket: "splitit-21d20.appspot.com",
-    messagingSenderId: "610097620685"
+    
 };
 
 if (!firebase.apps.length) {
@@ -204,6 +199,18 @@ export default class Database extends Component<Props>{
                 chosenBy: existingData
             })
         }
+    }
+
+    _updateItemInfo(id, itemIndex, attribute, data){
+        var _table = "Rooms/" + id + "/content/" + itemIndex + "/"
+        console.log("Data: " + data)
+        if(attribute == "price"){
+            _table = _table + "data/"
+        }
+        
+        firebase.database().ref(_table).update({
+            [attribute]: data
+        });
     }
 }
 

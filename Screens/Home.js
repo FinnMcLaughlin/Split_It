@@ -1,7 +1,7 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {AppRegistry, Platform, StyleSheet, Text, View, Button, TextInput} from 'react-native';
+import {AppRegistry, Platform, StyleSheet, Text, View, Button, TextInput, TouchableOpacity} from 'react-native';
 import firebase from '@firebase/app';
 import '@firebase/auth';
 import Database from './Database';
@@ -19,16 +19,96 @@ export default class Home extends Component<Props>{
 
         this.state = {
             userAuthenticated: false,
-            userDisplayName: ""
+            userDisplayName: "",
+            joiningBill: false,
+            joinBillID: "",
+            joinBillIdMessage: "",
+            billIDcheck: false
         }
 
         this.DB = new Database();
         this.Load = new Loading();
     }
 
+    _findBillID(billID){
+        return firebase.database().ref(`Rooms/${billID}/content`).once("value");
+    }
+    
+    _billIDCheck(billID){
+        if(billID.length == 4){
+            this._findBillID(billID).then((snapshot) => {
+                if(snapshot.val() == null){
+                    this.setState({
+                        joinBillIdMessage: "No Bill ID Found"
+                    });
+                }
+                else{
+                    this.props.navigation.navigate("Results", billID);
+                }    
+            });
+
+            return true;
+        }
+        else{
+            return false;
+        }        
+    }
+
+    _renderHomeScreen(){
+        if(!this.state.joiningBill){
+            return(
+            <View style={styles.searchInput}>
+                <Text>Welcome {this.state.userDisplayName}</Text>
+                <View style={styles.button_view}>
+                <Button 
+                title='Host Bill'
+                onPress={() => {this.props.navigation.navigate("Payment"), console.log("Camera Button Pressed")}} 
+                />
+                </View>
+                <View style={styles.button_view}>
+                    <Button title='Join Bill' 
+                    onPress={() => {this.setState({joiningBill: true}), console.log("Joining Bill")}}/>
+                </View>
+                <View style={styles.sign_out_view}>
+                    <Button title='Sign Out' 
+                    onPress={() => {this.Load._SignOutUser(), console.log("Sign Out Button Pressed")}}/>
+                </View>
+            </View>
+            );
+        }
+        else{
+            return(
+                <View style={styles.joinBillViewStyle}>
+                    <TouchableOpacity onPress={() => {console.log("TESTING TESTING")}}><Text style={{fontSize:40}}>Joining Bill</Text></TouchableOpacity>
+                    <TextInput style={styles.textInputBox} value={this.state.joinBillID}
+                        onChangeText={(billID) => this.setState({joinBillID: billID})}/>
+                    <Text style={{color: "red"}}>{this.state.joinBillIdMessage}</Text>
+                    <TouchableOpacity onPress={() => {this._billIDCheck(this.state.joinBillID.toUpperCase().trim()) ? console.log("Length Correct") : this.setState({joinBillIdMessage: "Bill ID Length 4"})}}> 
+                        <Text style={{fontSize:20}}>Join</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => {this.setState({joiningBill: false, joinBillID: "", joinBillIdMessage: ""})}}>
+                        <Text style={{fontSize:20}}>Return</Text>
+                    </TouchableOpacity>
+                </View>
+            );
+        }
+    }
+
+    ////this.props.navigation.navigate("Display", this.state.joinBillID) : this.setState({joinBillIdMessage: "Bill ID Length 4"})}}>
+    /*
+    <View style={styles.joinBillViewStyle}>
+                    <TouchableOpacity onPress={() => {console.log("TESTING TESTING")}}><Text style={{fontSize:40}}>Joining Bill</Text></TouchableOpacity>
+                    <TextInput style={styles.textInputBox} value={this.state.joinBillID}
+                        onChangeText={(billID) => this.state.joinBillID.length < 4 ? this.setState({joinBillID: billID}) : this.props.navigation.navigate("Results", this.state.joinBillID)}/>
+                    <Text>{this.state.joinBillIdMessage}</Text>
+                </View>
+    */
+
+    //<TouchableOpacity onPress={() => {this.state.joinBillID.length == 4 ? this.props.navigation.navigate("Display", this.state.joinBillID) : this.setState({joinBillIdMessage: "Bill ID Length 4"})}}><Text>JOIN</Text></TouchableOpacity>
+    //<TouchableOpacity onPress={() => {this.setState({joiningBill: false})}}><Text>CANCEL</Text></TouchableOpacity>
     componentDidMount(){
-        //firebase.auth().onAuthStateChanged(user => {(user ? this.setState({ userAuthenticated: true, userDisplayName: this.DB._getCurrentUserDisplayName()}) : this.props.navigation.navigate("Login"))});
-        firebase.auth().onAuthStateChanged(user => {this.props.navigation.navigate(user ? "Results" : "Login")});
+        firebase.auth().onAuthStateChanged(user => {(user ? this.setState({ userAuthenticated: true, userDisplayName: this.DB._getCurrentUserDisplayName()}) : this.props.navigation.navigate("Login"))});
+        //firebase.auth().onAuthStateChanged(user => {this.props.navigation.navigate(user ? "Home" : "Login")});
     }
   
     _SignOutUser(){
@@ -59,26 +139,8 @@ export default class Home extends Component<Props>{
                 <Text>Authenticating User...</Text>
             </View>
             :
-            <View style={styles.searchInput}>
-                <Text>Welcome {this.state.userDisplayName}</Text>
-                <View style={styles.button_view}>
-                <Button 
-                title='Camera'
-                onPress={() => {this.props.navigation.navigate("Camera"), console.log("Camera Button Pressed")}} 
-                />
-                </View>          
-                <View style={styles.button_view}>
-                    <Button title='Display From Database' 
-                    onPress={() => {this.DB._DisplayFromDatabase("Rooms", "A001/content", this.props), console.log("Display Button Pressed")}}/>
-                </View>
-                <View style={styles.button_view}>
-                    <Button title='Create New Room' 
-                    onPress={() => {this._RoomIDGen(), console.log("New Room Button Pressed")}}/>
-                </View>
-                <View style={styles.sign_out_view}>
-                    <Button title='Sign Out' 
-                    onPress={() => {this.Load._SignOutUser(), console.log("Sign Out Button Pressed")}}/>
-                </View>
+            <View>
+                {this._renderHomeScreen()}
             </View>
         )
     }
@@ -93,6 +155,23 @@ const styles = StyleSheet.create({
     },
     sign_out_view: {
         marginTop: 65
+    },
+    textInputBox: {
+        height: 40,
+        width: 250,
+        padding: 5,
+        borderWidth: 1,
+        borderColor: 'blue',
+    },
+    joinBillViewStyle: {
+        justifyContent: "space-between",
+        marginTop: 200,
+        alignItems: "center"
+    },
+    joinBillButtonStyle:{
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "space-around"
     }
 });
 

@@ -17,6 +17,7 @@ var AWS = require('aws-sdk/react-native');
 
 AWS.config.region = 'eu-west-1';
 
+
 function formatOCROutput(data){
   let TD = data.TextDetections;
   var numCheck = /(?:\d+)?\.\d+/;///\d+\.\d+/; //Checks for Floating Number
@@ -68,7 +69,7 @@ function formatOCROutput(data){
         var invalidChar = invalidKeyChars[invalidKeyCharsIndex];
 
         if(itemName.includes(invalidChar)){
-          itemName = itemName.replace(invalidChar, "");
+          itemName = itemName.replace(invalidChar, " ");
         }
       }
       
@@ -126,9 +127,7 @@ export default class Camera extends Component<Props>{
           //   else firebase.database().ref("Rooms").child(newRoom).set({
           //     data
           //   })
-          // });
-          
-
+          // });        
 
           rekt.detectText(params, function(err, data) {      
             if (err) console.log(err, err.stack);

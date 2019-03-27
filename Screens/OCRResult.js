@@ -1,10 +1,12 @@
 'use strict'
 
 import React, {Component} from 'react';
-import {AppRegistry, Platform, StyleSheet, Text, View, ScrollView, Button, FlatList, TouchableOpacity} from 'react-native';
+import {AppRegistry, Platform, StyleSheet, Text, View, ScrollView, Button, FlatList, TouchableOpacity, Modal, TextInput} from 'react-native';
 import firebase from '@firebase/app';
 import Database from './Database';
 
+//GaryUID: u9hUFHFBMRP8JG31EqbzeO4JPc43
+//RobUID: nLAgRb0DTfYsQjM3btjPhCBuqyh1
 
 export default class OCRResult extends Component<Props>{
     static NavigationOptions = {
@@ -17,36 +19,58 @@ export default class OCRResult extends Component<Props>{
         this.DB = new Database();
 
         this.state = {
+            billID: this.props.navigation.state.params,
             userID: firebase.auth().currentUser.uid,
             data: [{ item: "", data: {price: "", chosenBy: [""]} }],
             dataLoaded: false,
+            setRemainingPriceCheck: false,
+
+            modalVisible: false,
+            modalItemName: "",
+            modalItemPrice: "",
+            modalItemIndex: 0,
+            editItemName: false,
+            editItemPrice: false,
+            newItemName: "",
+            newItemPrice: "",
+
+            totalPrice: 35.99,
+            calculatedTotalPrice: 0.00,
             userBillPrice: 0.00,
             remainingTotalBillPrice: 0.00,
-            totalPrice: 35.99,
-            setremainingBillCheck: false,
-            updateremainingBillLock: false
+            remainingValue_TotalValueEqual: true
         }
 
         let dis = this;
-        firebase.database().ref("Rooms/ZILP/content").on('value', function(snapshot){
-            dis.setState({
-                data: snapshot.val(),
-                dataLoaded: true
-            });
-
-            if(!dis.state.setremainingBillCheck){
-              console.log("Checked")
+        firebase.database().ref(`Rooms/${this.state.billID}/content`).on('value', function(snapshot){            
+            if(!dis.state.setRemainingPriceCheck){
               dis._calculateRemainingBillPrice(snapshot.val());
-              dis.state.setremainingBillCheck = true;
             }
             else{
               dis._calculateUserBillPrice(snapshot.val());
             }
+
+            dis.setState({
+              data: snapshot.val(),
+              dataLoaded: true
+          });
         });
 
-        firebase.database().ref("Rooms/ZILP/PriceValues").on('value', function(snapshot){
+        firebase.database().ref(`Rooms/${this.state.billID}/PriceValues`).on('value', function(snapshot){          
+          var equal;
+          
+          if(dis.state.totalPrice == dis.state.calculatedTotalPrice){
+            equal = true;
+          }
+          else{
+            equal = false;
+          }
+
+          console.log("EQUAL: " + dis.state.totalPrice + " " + dis.state.calculatedTotalPrice)
+
           dis.setState({
-            remainingTotalBillPrice: snapshot.val().remainingBillPrice.toFixed(2)
+            remainingTotalBillPrice: snapshot.val().remainingBillPrice.toFixed(2),
+            remainingValue_TotalValueEqual: equal         
           })
         });
     }
@@ -58,19 +82,14 @@ export default class OCRResult extends Component<Props>{
         var itemPrice = items[itemIndex].data.price;
         
         totalRemainingValue = totalRemainingValue + parseFloat(itemPrice.replace(/[^\d.-]/g, ''));
+        console.log("Item: " + items[itemIndex].item + " Price: " + itemPrice + " Remaining Value: " + totalRemainingValue)
       }      
 
-      if(this.state.totalPrice != totalRemainingValue){
-        alert("Total Bill Price: " + this.state.totalPrice + " does not equal Remaining Bill Total: " + this.state.remainingTotalBillPrice
-        + "\nPossible Incorrect Item Price(s)");
-      }
-      else{
-        this.DB._setRemainingPrice("ZILP", totalRemainingValue);
-
-        this.setState({
-          remainingTotalBillPrice: totalRemainingValue.toFixed(2)
-        });
-      }
+      this.DB._setRemainingPrice(this.state.billID, totalRemainingValue);
+      
+      this.setState({
+        calculatedTotalPrice: totalRemainingValue
+      });
     }
 
     _calculateUserBillPrice(items){
@@ -100,11 +119,11 @@ export default class OCRResult extends Component<Props>{
         newUserBillPrice = newUserBillPrice - previousUserBillPrice;
       }
 
-      this.DB._updateRemainingPrice("ZILP", newUserBillPrice, rejectItem)
+      this.DB._updateRemainingPrice(this.state.billID, newUserBillPrice, rejectItem)
     }
 
     _chooseItem(itemIndex){
-      this.DB._UserChooseItem("ZILP", itemIndex, this.state.userID);
+      this.DB._UserChooseItem(this.state.billID, itemIndex, this.state.userID);
     }
 
     _renderChosenByInfo(chosen){
@@ -115,6 +134,106 @@ export default class OCRResult extends Component<Props>{
       }
 
       return renderString.substring(2);
+    }
+
+    _renderModal(){
+      var editNameVal = this.state.editItemName;
+      var editPriceVal = this.state.editItemPrice;
+      var itemIndex = this.state.modalItemIndex;
+      var itemName = this.state.modalItemName;
+      var itemPrice = this.state.modalItemPrice;
+      var newItemName = this.state.newItemName;
+      var newItemPrice = this.state.newItemPrice;
+
+      if(!editNameVal && !editPriceVal){
+        return(
+              <View style={styles.modalStyle}>
+                <View>
+                <Text style={styles.itemDataStyle}>{itemName}</Text>
+                <Text style={styles.itemDataStyle}>{itemPrice}</Text>
+                <TouchableOpacity onPress={() => {console.log("Modal Exit"), this.setState({newItemName: "", newItemPrice: "", modalVisible: false})}}><Text>Exit</Text></TouchableOpacity>
+                </View>
+                <View style={{marginRight: 15}}>
+                  <TouchableOpacity  onPress={() => {console.log("Change Item Name"), this.setState({editItemName: true})}}><Text style={styles.itemDataStyle}>Edit</Text></TouchableOpacity>
+                  <TouchableOpacity  onPress={() => {console.log("Change Item Price"), this.setState({editItemPrice: true})}}><Text style={styles.itemDataStyle}>Edit</Text></TouchableOpacity>
+                </View>
+              </View>);
+      }
+      else if(editNameVal && !editPriceVal){
+        return(
+              <View style={styles.modalStyle}>
+                
+                <View>
+                  <Text style={styles.itemDataStyle}>{itemName}</Text>
+                  
+                  <TextInput style={styles.textInputBox} value={newItemName}
+                   onChangeText={(newItemName) => this.setState({newItemName: newItemName})}/>
+                  
+                  <TouchableOpacity  onPress={() => {console.log("Cancel Item Name Update"), this.setState({editItemName: false})}}>
+                    <Text style={{fontSize: 20, justifyContent: "space-between", color: 'rgb(255, 0, 0)'}}>Cancel</Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity  onPress={() => {console.log("Accept Item Name Update: " + this.state.newItemName), 
+                  this.state.newItemName.length > 1 ? (this.DB._updateItemInfo(this.state.billID, itemIndex, "item", this.state.newItemName), this.setState({modalItemName: this.state.newItemName, editItemName: false})) : alert("Not Long Enough")}}>
+                    <Text style={{fontSize: 20, justifyContent: "space-between", color: 'rgb(0, 0, 255)'}}>Accept</Text>
+                  </TouchableOpacity>
+                  
+                  <Text style={styles.itemDataStyle}>{itemPrice}</Text>
+
+                </View>
+                <View style={{marginRight: 15}}>
+                  <TouchableOpacity  onPress={() => {console.log("Change Item Name")}}><Text style={styles.itemDataStyle}>Edit</Text></TouchableOpacity>
+                </View>
+              </View>);
+      }    
+      else if(!editNameVal && editPriceVal){
+        return(
+              <View style={styles.modalStyle}>
+                <View>
+                  <Text style={styles.itemDataStyle}>{itemName}</Text>
+
+                  <Text style={styles.itemDataStyle}>{itemPrice}</Text>
+
+                  <TextInput style={styles.textInputBox} value={newItemPrice}
+                  onChangeText={(newItemPrice) => this.setState({newItemPrice: newItemPrice})}/>
+                  
+                  <TouchableOpacity  onPress={() => {console.log("Cancel Item Price Update"), this.setState({editItemPrice: false})}}>
+                    <Text style={{fontSize: 20, justifyContent: "space-between", color: 'rgb(255, 0, 0)'}}>Cancel</Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity  onPress={() => {console.log("Accept Item Price Update"), 
+                    this.state.newItemPrice.length > 1 ? (this.DB._updateItemInfo(this.state.billID, itemIndex, "price", this.state.newItemPrice), this.setState({modalItemPrice: this.state.newItemPrice, editItemPrice: false})) : alert("Not Long Enough")}}>
+                    <Text style={{fontSize: 20, justifyContent: "space-between", color: 'rgb(0, 0, 255)'}}>Accept</Text>
+                  </TouchableOpacity>
+                                  
+                </View>
+                <View style={{marginRight: 15}}>
+                  <TouchableOpacity  onPress={() => {console.log("Change Item Name")}}><Text style={styles.itemDataStyle}>Edit</Text></TouchableOpacity>
+                </View>
+              </View>);
+      }
+    }
+
+    _renderFooter(){
+      if(this.state.remainingValue_TotalValueEqual){
+        return(
+        <View style={styles.footerStyle}>
+            <Text style={styles.footerTextStyle}>Your Total: {this.state.userBillPrice}</Text>
+            <Text style={styles.footerTextStyle}>Remaining: {this.state.remainingTotalBillPrice}</Text>
+        </View>); 
+      }
+      else{
+        if(this.state.setRemainingPriceCheck && !this.state.modalVisible){
+          alert("Bill Total: " + this.state.totalPrice + " and Calculated Total: " + this.state.calculatedTotalPrice
+          + " does not match.\nReview the item list and edit any necessary items to match the bill");
+        }
+
+        return(
+          <View style={styles.footerStyle}>
+              <Text style={styles.footerTextStyle}>Bill Total: {this.state.totalPrice}</Text>
+              <Text style={styles.footerTextStyle}>Remaining: {this.state.calculatedTotalPrice}</Text>
+          </View>);
+      }
     }
 
     render(){
@@ -129,6 +248,7 @@ export default class OCRResult extends Component<Props>{
         :
         <View style={{flex: 1}}>
           <ScrollView>
+
             <FlatList data={this.state.data}
               renderItem={({item, index}) => (
                   <View style={styles.headerStyle}>
@@ -139,17 +259,21 @@ export default class OCRResult extends Component<Props>{
                     </View>
                     <View>
                       <TouchableOpacity  onPress={() => {console.log("This item: " + item), this._chooseItem(index)}}><Text style={styles.itemDataStyle}>Choose</Text></TouchableOpacity>
-                      <Text style={styles.itemDataStyle}>Edit</Text>
+                      <TouchableOpacity  onPress={() => {console.log("Modal Visible"), this.setState({ modalVisible: true, modalItemName: item.item, modalItemPrice: item.data.price, modalItemIndex: index })}}><Text style={styles.itemDataStyle}>Edit</Text></TouchableOpacity>
                     </View>
                   </View>
                 )
               }
             />
+          
           </ScrollView>
-          <View style={styles.footerStyle}>
-            <Text style={styles.footerTextStyle}>Your Total: {this.state.userBillPrice}</Text>
-            <Text style={styles.footerTextStyle}>Remaining: {this.state.remainingTotalBillPrice}</Text>
-          </View>  
+          
+          {this._renderFooter()}
+        
+          <Modal transparent={false} visible={this.state.modalVisible} animationType="slide" onRequestClose={() => console.log("Modal Closed")}>
+            {this._renderModal()}
+          </Modal>
+
         </View>    
       )
     }
@@ -181,36 +305,22 @@ const styles = StyleSheet.create({
     footerTextStyle: {
       fontSize: 20,
       fontWeight: "bold"
+    },
+    modalStyle: {
+      flex: 1,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginTop: 200,
+      marginBottom: 150,
+      backgroundColor:'rgb(255, 255, 255)'
+    },
+    textInputBox: {
+      height: 40,
+      width: 250,
+      padding: 5,
+      borderWidth: 1,
+      borderColor: 'blue',
     }
   });
 
-/*
-<View style={{flex: 1}}>
-  <ScrollView>
-    <SectionList
-      sections={this.state.data}
-      renderSectionHeader={({section}) => 
-      <View style={styles.headerStyle}>
-      <Text style={styles.warningStyle}>{section.item}</Text><Button style={styles.buttonStyle} title='Log Item' 
-      onPress={() => {console.log("This item: " + section.item)}}/>
-      </View>
-      }
-      renderItem={({item}) =>
-        <Text style={styles.itemDataStyle}>{item.price}{item.chosenBy}</Text>}
-      keyExtractor={(item, index) => index}
-      />
-  </ScrollView>
-  <View style={styles.footerStyle}>
-    <Text style={styles.footerTextStyle}>Bill Total:</Text>
-    <Text style={styles.footerTextStyle}>Your Total:</Text>
-  </View>  
-</View>    
-
-      var listData = [
-          { item: "Po-ta-toes", data: [{price: "€8.50"}, {chosenBy: ["Finn"]}]},
-          { item: "Boil em", data: [{price: "€2.50"}, {chosenBy: ["Dimiter"]}]},
-          { item: "Mash em", data: [{price: "€4.00"}, {chosenBy: ["Colm"]}]},
-          { item: "Stick em in a stew", data: [{price: "€10.00"}, {chosenBy: ["Finn, Colm"]}]}
-        ];
-*/
 AppRegistry.registerComponent('Results', () => OCRResult);

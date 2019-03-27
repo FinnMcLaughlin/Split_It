@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Tue Feb 26 13:00:19 GMT 2019
+#Wed Mar 27 11:32:46 GMT 2019
 56.path=lib/mips64/libjpgt.so
 5.base=C\:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
 42.base=C\:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\transforms\\mergeJniLibs\\debug\\0
