@@ -1,7 +1,7 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {AppRegistry, Platform, StyleSheet, Text, View, Button, TextInput, TouchableOpacity} from 'react-native';
+import {AppRegistry, Platform, StyleSheet, Text, View, Button, TextInput, TouchableOpacity, Image} from 'react-native';
 import firebase from '@firebase/app';
 import '@firebase/auth';
 import Database from './Database';
@@ -29,14 +29,10 @@ export default class Home extends Component<Props>{
         this.DB = new Database();
         this.Load = new Loading();
     }
-
-    _findBillID(billID){
-        return firebase.database().ref(`Rooms/${billID}/content`).once("value");
-    }
     
     _billIDCheck(billID){
         if(billID.length == 4){
-            this._findBillID(billID).then((snapshot) => {
+            this.DB._findBillID(billID).then((snapshot) => {
                 if(snapshot.val() == null){
                     this.setState({
                         joinBillIdMessage: "No Bill ID Found"
@@ -54,15 +50,29 @@ export default class Home extends Component<Props>{
         }        
     }
 
+    componentDidMount(){
+        firebase.auth().onAuthStateChanged(user => {(user ? this.setState({ userAuthenticated: true, userDisplayName: this.DB._getCurrentUserDisplayName()}) : this.props.navigation.navigate("Login"))});
+        //firebase.auth().onAuthStateChanged(user => {this.props.navigation.navigate(user ? "Camera" : "Login")});
+    }
+  
+    _SignOutUser(){
+          const user = firebase.auth().currentUser.uid;
+  
+          firebase.auth().signOut()
+          .then( () => {console.log("Log Out", user)})
+          .catch( () => {console.log("Unable to sign out")})
+    }
+
     _renderHomeScreen(){
         if(!this.state.joiningBill){
             return(
             <View style={styles.searchInput}>
                 <Text>Welcome {this.state.userDisplayName}</Text>
                 <View style={styles.button_view}>
+                <Image style={styles.logoStyle} source={require('./FYP_Logo.png')}/>
                 <Button 
                 title='Host Bill'
-                onPress={() => {this.props.navigation.navigate("Payment"), console.log("Camera Button Pressed")}} 
+                onPress={() => {this.props.navigation.navigate("Camera"), console.log("Camera Button Pressed")}} 
                 />
                 </View>
                 <View style={styles.button_view}>
@@ -92,45 +102,6 @@ export default class Home extends Component<Props>{
                 </View>
             );
         }
-    }
-
-    ////this.props.navigation.navigate("Display", this.state.joinBillID) : this.setState({joinBillIdMessage: "Bill ID Length 4"})}}>
-    /*
-    <View style={styles.joinBillViewStyle}>
-                    <TouchableOpacity onPress={() => {console.log("TESTING TESTING")}}><Text style={{fontSize:40}}>Joining Bill</Text></TouchableOpacity>
-                    <TextInput style={styles.textInputBox} value={this.state.joinBillID}
-                        onChangeText={(billID) => this.state.joinBillID.length < 4 ? this.setState({joinBillID: billID}) : this.props.navigation.navigate("Results", this.state.joinBillID)}/>
-                    <Text>{this.state.joinBillIdMessage}</Text>
-                </View>
-    */
-
-    //<TouchableOpacity onPress={() => {this.state.joinBillID.length == 4 ? this.props.navigation.navigate("Display", this.state.joinBillID) : this.setState({joinBillIdMessage: "Bill ID Length 4"})}}><Text>JOIN</Text></TouchableOpacity>
-    //<TouchableOpacity onPress={() => {this.setState({joiningBill: false})}}><Text>CANCEL</Text></TouchableOpacity>
-    componentDidMount(){
-        firebase.auth().onAuthStateChanged(user => {(user ? this.setState({ userAuthenticated: true, userDisplayName: this.DB._getCurrentUserDisplayName()}) : this.props.navigation.navigate("Login"))});
-        //firebase.auth().onAuthStateChanged(user => {this.props.navigation.navigate(user ? "Home" : "Login")});
-    }
-  
-    _SignOutUser(){
-          const user = firebase.auth().currentUser.uid;
-  
-          firebase.auth().signOut()
-          .then( () => {console.log("Log Out", user)})
-          .catch( () => {console.log("Unable to sign out")})
-    }
-
-    _RoomIDGen(){
-        const ID_chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        var newRoomID = "";
-        var idLength = 4;
-
-        do{
-            var randIndex = Math.floor(Math.random() * (ID_chars.length));
-            newRoomID = newRoomID + ID_chars.charAt(randIndex);
-        }
-        while(newRoomID.length < idLength);
-
-        this.DB._newRoom(newRoomID)
     }
 
     render(){       
@@ -172,7 +143,25 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         justifyContent: "space-around"
+    },
+    logoStyle: {
+       marginLeft: 25
     }
 });
 
 AppRegistry.registerComponent('Home', () => Home);
+
+
+
+ ////this.props.navigation.navigate("Display", this.state.joinBillID) : this.setState({joinBillIdMessage: "Bill ID Length 4"})}}>
+    /*
+    <View style={styles.joinBillViewStyle}>
+                    <TouchableOpacity onPress={() => {console.log("TESTING TESTING")}}><Text style={{fontSize:40}}>Joining Bill</Text></TouchableOpacity>
+                    <TextInput style={styles.textInputBox} value={this.state.joinBillID}
+                        onChangeText={(billID) => this.state.joinBillID.length < 4 ? this.setState({joinBillID: billID}) : this.props.navigation.navigate("Results", this.state.joinBillID)}/>
+                    <Text>{this.state.joinBillIdMessage}</Text>
+                </View>
+    */
+
+    //<TouchableOpacity onPress={() => {this.state.joinBillID.length == 4 ? this.props.navigation.navigate("Display", this.state.joinBillID) : this.setState({joinBillIdMessage: "Bill ID Length 4"})}}><Text>JOIN</Text></TouchableOpacity>
+    //<TouchableOpacity onPress={() => {this.setState({joiningBill: false})}}><Text>CANCEL</Text></TouchableOpacity>

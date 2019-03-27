@@ -1,7 +1,7 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {AppRegistry, Platform, StyleSheet, Text, View, Button, TouchableOpacity} from 'react-native';
+import {AppRegistry, Platform, StyleSheet, Text, View, Button, TouchableOpacity, ImageBackground, Dimensions} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import RNFetchBlob from 'rn-fetch-blob';
 import { Buffer } from 'safe-buffer';
@@ -10,13 +10,16 @@ import RNTesseractOcr from 'react-native-tesseract-ocr';
 
 import navigate from './App';
 import firebase from '@firebase/app';
+import Database from './Database';
 import symbolicateStackTrace from 'react-native/Libraries/Core/Devtools/symbolicateStackTrace';
+import { gray } from 'ansi-colors';
 
 
 var AWS = require('aws-sdk/react-native');
 
 AWS.config.region = 'eu-west-1';
-
+AWS.config.accessKeyId = 'AKIAJ4ZE5PIMV6ALDFHQ';
+AWS.config.secretAccessKey = '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';
 
 function formatOCROutput(data){
   let TD = data.TextDetections;
@@ -102,67 +105,110 @@ export default class Camera extends Component<Props>{
     constructor(props)
     {
       super(props);
+
+      this.state = {
+        pictureTaken: false,
+        picture_uri: "",
+        user_id: firebase.auth().currentUser.uid
+      }
+
+      this.DB = new Database();
     }
 
-    _TakePicture =  async function() {
+  _formatPicture = async function() {
+    await RNFetchBlob.fs.readFile(this.state.picture_uri, 'base64').then( async (value) => {
+      var params = {
+        Image: {
+          Bytes: new Buffer.from(value, 'base64')
+        }
+      };
+      
+      var rekt = new AWS.Rekognition();
+      
+      var newRoom = "J3LW";  
+      let uid = this.state.user_id;
+
+      rekt.detectText(params, function(err, data) {      
+        if (err) console.log(err, err.stack);
+        else {
+          var content = formatOCROutput(data)
+
+          firebase.database().ref(`Rooms/${newRoom}`).set({
+            content: content,
+            host: uid
+          });
+        }
+      });
+
+      //this.DB._billIDGen();
+      console.log(this.state.picture_uri);
+      this.props.navigation.navigate("Results", newRoom);
+    });
+  }
+
+  _TakePicture =  async function() {
       if (this.camera) {
         
-        const options = { quality: 0.5, base64: true, skipProcessing: true };
+        const options = { quality: 0.5, base64: true, skipProcessing: true, fixOrientation: true };
         const data =  await this.camera.takePictureAsync(options)
         console.log("Raw Data", data);
-        
-        await RNFetchBlob.fs.readFile(data.uri, 'base64').then( async (value) => {
-            var params = {
-            Image: {
-              Bytes: new Buffer.from(value, 'base64')
-            }
-          };
-          
-          var rekt = new AWS.Rekognition();
-          
-          var newRoom = "T3ST";
 
-          // rekt.detectText(params, function(err, data) {      
-          //   if (err) console.log(err, err.stack);
-          //   else firebase.database().ref("Rooms").child(newRoom).set({
-          //     data
-          //   })
-          // });        
-
-          rekt.detectText(params, function(err, data) {      
-            if (err) console.log(err, err.stack);
-            else {
-              var content = formatOCROutput(data)
-              firebase.database().ref("Rooms").child(newRoom).set({
-                content
-              });
-            }
-          });
-
-          this.props.navigation.navigate("Results");
+        this.setState({
+          picture_uri: data.uri,
+          pictureTaken: true
         });
+
+          console.log("Picture Taken");
+
+          //this._formatPicture();
       }
+  }
+
+  _renderCamera(){
+    if(!this.state.pictureTaken){
+      return(
+          <RNCamera
+            ref={ref => {this.camera = ref;}}
+            type={RNCamera.Constants.Type.back}
+            style={styles.camera}
+            autoFocus={RNCamera.Constants.AutoFocus.on}>
+          <View style={styles.button_view}>
+              <Button
+                onPress={console.log("Take Picture"), this._TakePicture.bind(this)}
+                style = {styles.button}
+                title = "Take Picture">
+              </Button>
+          </View>
+          </RNCamera>
+      );
+    }
+    else{
+      return(
+        <View style={styles.button_view}>
+          <ImageBackground source={{uri: this.state.picture_uri}} style={styles.preview}/>
+          <View>
+                  <Button
+                    onPress={() => console.log("Accept Picture"), this._formatPicture.bind(this)}
+                    style = {styles.button}
+                    title = "Accept Picture">
+                  </Button>
+            </View>            
+        </View>
+      );
+    }
   }
 
     render(){
         return(
           <View style={styles.view}>
-            <RNCamera
-            ref={ref => {this.camera = ref;}}
-            type={RNCamera.Constants.Type.back}
-            style={styles.camera}
-            autoFocus={RNCamera.Constants.AutoFocus.on}/>
-            <View style={styles.button_view}>
-                <Button
-                  onPress={console.log("Take Picture"), this._TakePicture.bind(this)}
-                  style = {styles.button}
-                  title = "Take Picture">
-                </Button>
-              </View>
+            {this._renderCamera()}
           </View>
-      )
+      );
     }
 }
+
+//require('./FYP_Logo.png')
+//{uri: this.state.picture_uri}
 
 const styles = StyleSheet.create({
     view: {
@@ -173,14 +219,20 @@ const styles = StyleSheet.create({
     camera: {
       flex: 1,
       justifyContent: 'flex-end',
-      alignItems: 'center'
+      alignItems: 'center',
+      height: Dimensions.get('window').height - 125,
+      width: Dimensions.get('window').width
     },
     button_view: {
       flex: 0,
-      flexDirection: 'row'
+      flexDirection: 'column'
     },
     button: {
-      alignSelf: 'center'
+      alignSelf: 'center',
+    },
+    preview: {
+      height: Dimensions.get('window').height - 125,
+      width: Dimensions.get('window').width
     }
   });
   

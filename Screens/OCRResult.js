@@ -43,53 +43,58 @@ export default class OCRResult extends Component<Props>{
 
         let dis = this;
         firebase.database().ref(`Rooms/${this.state.billID}/content`).on('value', function(snapshot){            
-            if(!dis.state.setRemainingPriceCheck){
-              dis._calculateRemainingBillPrice(snapshot.val());
-            }
-            else{
-              dis._calculateUserBillPrice(snapshot.val());
-            }
+              if(!dis.state.setRemainingPriceCheck){
+                dis._calculateRemainingBillPrice(snapshot.val());
+              }
+              else{
+                dis._calculateUserBillPrice(snapshot.val());
+              }
 
-            dis.setState({
-              data: snapshot.val(),
-              dataLoaded: true
-          });
+              if(snapshot.val() != null){
+                dis.setState({
+                  data: snapshot.val(),
+                  dataLoaded: true
+                });
+              }
         });
 
         firebase.database().ref(`Rooms/${this.state.billID}/PriceValues`).on('value', function(snapshot){          
-          var equal;
+            var equal;
           
-          if(dis.state.totalPrice == dis.state.calculatedTotalPrice){
-            equal = true;
-          }
-          else{
-            equal = false;
-          }
+            if(dis.state.totalPrice == dis.state.calculatedTotalPrice){
+              equal = true;
+            }
+            else{
+              equal = false;
+            }
 
-          console.log("EQUAL: " + dis.state.totalPrice + " " + dis.state.calculatedTotalPrice)
-
-          dis.setState({
-            remainingTotalBillPrice: snapshot.val().remainingBillPrice.toFixed(2),
-            remainingValue_TotalValueEqual: equal         
-          })
+            console.log("EQUAL: " + dis.state.totalPrice + " " + dis.state.calculatedTotalPrice)
+            if(snapshot.val() != null){
+              dis.setState({
+                remainingTotalBillPrice: snapshot.val().remainingBillPrice.toFixed(2),
+                remainingValue_TotalValueEqual: equal         
+              });
+            }
         });
     }
     
     _calculateRemainingBillPrice(items){
-      var totalRemainingValue = 0;
+      if(items != null){
+        var totalRemainingValue = 0;
 
-      for(var itemIndex=0; itemIndex < items.length; itemIndex++){
-        var itemPrice = items[itemIndex].data.price;
+        for(var itemIndex=0; itemIndex < items.length; itemIndex++){
+          var itemPrice = items[itemIndex].data.price;
+          
+          totalRemainingValue = totalRemainingValue + parseFloat(itemPrice.replace(/[^\d.-]/g, ''));
+          console.log("Item: " + items[itemIndex].item + " Price: " + itemPrice + " Remaining Value: " + totalRemainingValue)
+        }      
+  
+        this.DB._setRemainingPrice(this.state.billID, totalRemainingValue);
         
-        totalRemainingValue = totalRemainingValue + parseFloat(itemPrice.replace(/[^\d.-]/g, ''));
-        console.log("Item: " + items[itemIndex].item + " Price: " + itemPrice + " Remaining Value: " + totalRemainingValue)
-      }      
-
-      this.DB._setRemainingPrice(this.state.billID, totalRemainingValue);
-      
-      this.setState({
-        calculatedTotalPrice: totalRemainingValue
-      });
+        this.setState({
+          calculatedTotalPrice: totalRemainingValue
+        });
+      }
     }
 
     _calculateUserBillPrice(items){

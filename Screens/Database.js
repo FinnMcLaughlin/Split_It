@@ -2,22 +2,30 @@
 
 import React, {Component} from 'react';
 import {AppRegistry, Platform, StyleSheet, Text, View} from 'react-native';
+import Home from './Home';
 import firebase from '@firebase/app';
 import '@firebase/auth';
 
 var config = {
-    
+    apiKey: "AIzaSyBY7NjjYQ9tHYwCOu-ilMZaG4BZsbuI9V4",
+    authDomain: "splitit-21d20.firebaseapp.com",
+    databaseURL: "https://splitit-21d20.firebaseio.com",
+    projectId: "splitit-21d20",
+    storageBucket: "splitit-21d20.appspot.com",
+    messagingSenderId: "610097620685"
 };
 
 if (!firebase.apps.length) {
     firebase.initializeApp(config);
 }
 
-export default class Database extends Component<Props>{
+type Props = {};
 
+
+export default class Database extends Component<Props>{
     constructor(props)
     {
-        super(props);
+        super(props);      
     }
     
     _RegisterUser(email, password, name){
@@ -31,57 +39,69 @@ export default class Database extends Component<Props>{
             console.log("Success")})
     }
 
-    _newRoom(roomID){
-        const _path = "Rooms/" + roomID;
-        const content = {
-            "Item": {
-                "Value": "",
-                "ChosenBy": [""]
-            },
-            "Total":{
-                "Value": "",
-                "Remaining": ""
-            }
-        };
+    // _DisplayFromDatabase(table, uid, props){
+    //     const _table = table + "/" + uid;
 
-        const members = {
-            "Host": "",
-            "Joined": [""]
-        };
+    //     console.log("Display From Database ----")        
 
+    //     firebase.database().ref(_table).once('value', function(values){
+    //         props.navigation.navigate("Display", {data: values.val()})
+    //     });
+    // }
 
-        firebase.database().ref("Rooms").child(roomID).set({
-            content,
-            members
-        }).then(() =>{
-            console.log("New Room:", roomID);
-        });  
+    // _GetTextResult(roomID){
+    //     const _path = "Rooms/" + roomID + "/data/TextDetections";
+    //     firebase.database().ref(_path).once('value', function(values){
+    //         console.log("Path: ", _path);
+    //         console.log("Values: ", values.val());
+    //         return values.val();
+    //     })
+    // }
+
+    // _UpdateDatabase(table, id, key, value){
+    //     const _table = table + "/" + id;
+        
+    //     firebase.database().ref(_table).update({
+    //        Value: value
+    //     });
+    // }
+
+    _findBillID(billID){
+        console.log("Checking");
+        return firebase.database().ref(`Rooms/${billID}/content`).once("value");
     }
 
-    _DisplayFromDatabase(table, uid, props){
-        const _table = table + "/" + uid;
+    _billIDGen(){
+        const ID_chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        var ID = "";
+        var idLength = 4;        
 
-        console.log("Display From Database ----")        
+        do{
+            var randIndex = Math.floor(Math.random() * (ID_chars.length));
+            ID = ID + ID_chars.charAt(randIndex);
+            console.log("Room ID: " + ID);
+        }
+        while(ID.length < idLength);
 
-        firebase.database().ref(_table).once('value', function(values){
-            props.navigation.navigate("Display", {data: values.val()})
+        console.log("New Room: " + ID);
+
+        this._findBillID(ID.toUpperCase()).then((snapshot) => {
+            if(snapshot.val() == null){
+                console.log("Unique ID: " + ID);
+                this._createNewRoom(ID).then(() => {
+                    console.log("Room Created");
+                });
+            }
+            else{
+                console.log("Not Unqiue, regenerate ID")
+                this._billIDGen();
+            }
         });
     }
 
-    _GetTextResult(roomID){
-        const _path = "Rooms/" + roomID + "/data/TextDetections";
-        firebase.database().ref(_path).once('value', function(values){
-            console.log("Path: ", _path);
-            console.log("Values: ", values.val());
-            return values.val();
-        })
-    }
-
-    _UpdateDatabase(table, id, key, value){
-        const _table = table + "/" + id;
-        
-        firebase.database().ref(_table).update({
-           Value: value
+    _createNewRoom(billID){
+        return firebase.database().ref(`Rooms/${billID}`).set({
+            Host: firebase.auth().currentUser.uid
         });
     }
 
