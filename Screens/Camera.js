@@ -18,8 +18,7 @@ import { gray } from 'ansi-colors';
 var AWS = require('aws-sdk/react-native');
 
 AWS.config.region = 'eu-west-1';
-AWS.config.accessKeyId = 'AKIAJ4ZE5PIMV6ALDFHQ';
-AWS.config.secretAccessKey = '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';
+
 
 function formatOCROutput(data){
   let TD = data.TextDetections;
