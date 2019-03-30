@@ -150,6 +150,8 @@ android/support/v7/widget/RecyclerView$Orientation.class
 android/support/v7/widget/RecyclerView$State$LayoutState.class
 android/support/v7/widget/ViewBoundsCheck$ViewBounds.class
 com/RNFetchBlob/RNFetchBlobPackage.class
+com/braintreepayments/api/annotations/Beta.class
+com/braintreepayments/api/models/BraintreeRequestCodes.class
 com/drew/lang/annotations/NotNull.class
 com/drew/lang/annotations/Nullable.class
 com/drew/lang/annotations/SuppressWarnings.class
@@ -318,4 +320,8 @@ javax/inject/Named.class
 javax/inject/Qualifier.class
 javax/inject/Scope.class
 javax/inject/Singleton.class
+lib/android/paypal/com/magnessdk/b/a$a.class
+lib/android/paypal/com/magnessdk/d$a.class
+lib/android/paypal/com/magnessdk/d$b.class
+lib/android/paypal/com/magnessdk/network/c$a.class
 org/reactnative/camera/RNCameraPackage.class

@@ -1,9 +1,14 @@
 -- Merging decision tree log ---
+data
+INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:34:4-62
+	android:scheme
+		INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:34:10-53
 manifest
-ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-29:12
-INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-29:12
-INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-29:12
-INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-29:12
+ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-39:12
+INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-39:12
+INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-39:12
+INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-39:12
 MERGED from [com.android.support:multidex:1.0.2] C:\Users\user\.gradle\caches\transforms-1\files-1.1\multidex-1.0.2.aar\5240f3451d6dc9804592b6159b1354fa\AndroidManifest.xml:17:1-22:12
 MERGED from [:react-native-camera] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\react-native-camera\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:2:1-18:12
 MERGED from [:rn-fetch-blob] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\rn-fetch-blob\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:2:1-47:12
@@ -46,6 +51,7 @@ MERGED from [com.android.support:support-core-ui:27.1.1] C:\Users\user\.gradle\c
 MERGED from [com.android.support:support-core-utils:27.1.1] C:\Users\user\.gradle\caches\transforms-1\files-1.1\support-core-utils-27.1.1.aar\97442bc2dd789f3885c94cc2c4c57289\AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:support-vector-drawable:27.1.1] C:\Users\user\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-27.1.1.aar\27dbcc17221ebf25fc89028533fc42fb\AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:support-compat:27.1.1] C:\Users\user\.gradle\caches\transforms-1\files-1.1\support-compat-27.1.1.aar\c33a9371c1f1ba83dc27097351eee6b2\AndroidManifest.xml:17:1-22:12
+MERGED from [com.braintreepayments.api:braintree:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\braintree-2.22.0.aar\4efd1b40c220aa1c4de96395fa0ead98\AndroidManifest.xml:2:1-26:12
 MERGED from [com.facebook.fresco:fresco:1.10.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\fresco-1.10.0.aar\75020597a6bd88d5708512b6baf457e6\AndroidManifest.xml:2:1-9:12
 MERGED from [com.facebook.fresco:imagepipeline-okhttp3:1.10.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\imagepipeline-okhttp3-1.10.0.aar\8bfff0ec42d36aa37ff1796b2e245a0d\AndroidManifest.xml:2:1-9:12
 MERGED from [com.facebook.fresco:drawee:1.10.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\drawee-1.10.0.aar\1e83996ed96c8162cb132ddc54ce50b0\AndroidManifest.xml:2:1-9:12
@@ -54,26 +60,32 @@ MERGED from [com.facebook.fresco:imagepipeline-base:1.10.0] C:\Users\user\.gradl
 MERGED from [com.facebook.soloader:soloader:0.5.1] C:\Users\user\.gradle\caches\transforms-1\files-1.1\soloader-0.5.1.aar\64f122f1013cb2bad4635685ad3f98fe\AndroidManifest.xml:2:1-13:12
 MERGED from [org.webkit:android-jsc:r174650] C:\Users\user\.gradle\caches\transforms-1\files-1.1\android-jsc-r174650.aar\50d1ec020098c0388af0542655a26b23\AndroidManifest.xml:1:1-3:12
 MERGED from [com.rmtheis:tess-two:7.0.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\tess-two-7.0.0.aar\b02ba9c912fb9388aa2e903cbddf9e19\AndroidManifest.xml:17:1-26:12
+MERGED from [com.braintreepayments.api:google-payment:1.0.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\google-payment-1.0.0.aar\7664e497b8af37f181b9df02f071b1a6\AndroidManifest.xml:2:1-11:12
+MERGED from [com.braintreepayments.api:visa-checkout:1.0.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\visa-checkout-1.0.0.aar\86a8595253864cbee9509dd54a299a80\AndroidManifest.xml:2:1-12:12
+MERGED from [com.paypal.android.sdk:paypal-one-touch:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\paypal-one-touch-2.22.0.aar\c6b100afbb07bf5af3272315efb8e974\AndroidManifest.xml:2:1-13:12
+MERGED from [com.braintreepayments.api:core:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\core-2.22.0.aar\945a090ed4116fdfbf16df7c717b6b7a\AndroidManifest.xml:2:1-11:12
 MERGED from [com.facebook.fresco:fbcore:1.10.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\fbcore-1.10.0.aar\0cf8ef883cafece5a8dc3d0572c9d096\AndroidManifest.xml:2:1-9:12
 MERGED from [android.arch.lifecycle:runtime:1.1.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\a952509b4f0a74a375ded09ed1bd7d0e\AndroidManifest.xml:17:1-22:12
 MERGED from [com.google.android.gms:play-services-measurement-base:16.0.3] C:\Users\user\.gradle\caches\transforms-1\files-1.1\play-services-measurement-base-16.0.3.aar\c23111cba27a145f7c53aeb3407f07df\AndroidManifest.xml:2:1-9:12
+MERGED from [com.braintreepayments:browser-switch:0.1.6] C:\Users\user\.gradle\caches\transforms-1\files-1.1\browser-switch-0.1.6.aar\b976f0f421e981102f2fc65410a0d474\AndroidManifest.xml:2:1-11:12
+MERGED from [com.paypal.android.sdk:data-collector:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\data-collector-2.22.0.aar\6a510ece6412743824b4f0b72ed4da61\AndroidManifest.xml:2:1-13:12
 MERGED from [android.arch.lifecycle:livedata-core:1.1.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.0.aar\933d8937a8da16089d9bb4f30f2824b1\AndroidManifest.xml:17:1-22:12
 MERGED from [android.arch.core:runtime:1.1.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\af81ff9075ddd031ce438b02375d13b4\AndroidManifest.xml:17:1-22:12
 MERGED from [android.arch.lifecycle:viewmodel:1.1.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.0.aar\de5b8396c266c82d139b5845a4065692\AndroidManifest.xml:17:1-22:12
-INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-29:12
-INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-29:12
-INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-29:12
+INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-39:12
+INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-39:12
+INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-39:12
 	package
 		ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:2:5-27
 		INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml
 		INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml
 	android:versionName
 		INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml
-		ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-29:12
+		ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-39:12
 		INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml
 	android:versionCode
 		INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml
-		ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-29:12
+		ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-39:12
 		INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml
 	xmlns:android
 		ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:11-69
@@ -89,6 +101,12 @@ MERGED from [com.google.firebase:firebase-analytics-impl:16.2.2] C:\Users\user\.
 MERGED from [com.google.firebase:firebase-analytics-impl:16.2.2] C:\Users\user\.gradle\caches\transforms-1\files-1.1\firebase-analytics-impl-16.2.2.aar\698ea2573e08ba3f2ed6c48380b2afa0\AndroidManifest.xml:23:5-67
 MERGED from [com.google.firebase:firebase-iid:17.0.3] C:\Users\user\.gradle\caches\transforms-1\files-1.1\firebase-iid-17.0.3.aar\882b3aed98ffdd9ca9dedf0ea1f4cce0\AndroidManifest.xml:23:5-67
 MERGED from [com.google.firebase:firebase-iid:17.0.3] C:\Users\user\.gradle\caches\transforms-1\files-1.1\firebase-iid-17.0.3.aar\882b3aed98ffdd9ca9dedf0ea1f4cce0\AndroidManifest.xml:23:5-67
+MERGED from [com.braintreepayments.api:braintree:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\braintree-2.22.0.aar\4efd1b40c220aa1c4de96395fa0ead98\AndroidManifest.xml:12:5-67
+MERGED from [com.braintreepayments.api:braintree:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\braintree-2.22.0.aar\4efd1b40c220aa1c4de96395fa0ead98\AndroidManifest.xml:12:5-67
+MERGED from [com.paypal.android.sdk:paypal-one-touch:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\paypal-one-touch-2.22.0.aar\c6b100afbb07bf5af3272315efb8e974\AndroidManifest.xml:11:5-67
+MERGED from [com.paypal.android.sdk:paypal-one-touch:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\paypal-one-touch-2.22.0.aar\c6b100afbb07bf5af3272315efb8e974\AndroidManifest.xml:11:5-67
+MERGED from [com.paypal.android.sdk:data-collector:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\data-collector-2.22.0.aar\6a510ece6412743824b4f0b72ed4da61\AndroidManifest.xml:11:5-67
+MERGED from [com.paypal.android.sdk:data-collector:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\data-collector-2.22.0.aar\6a510ece6412743824b4f0b72ed4da61\AndroidManifest.xml:11:5-67
 	android:name
 		ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:4:22-64
 uses-permission#android.permission.SYSTEM_ALERT_WINDOW
@@ -104,7 +122,7 @@ MERGED from [:react-native-camera] C:\Users\user\Documents\DIT Data Backup\Final
 	android:name
 		ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:6:22-62
 application
-ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:8:5-27:19
+ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:8:5-37:19
 MERGED from [:rn-fetch-blob] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\rn-fetch-blob\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:35:5-45:19
 MERGED from [:rn-fetch-blob] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\rn-fetch-blob\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:35:5-45:19
 MERGED from [com.facebook.react:react-native:0.57.4] C:\Users\user\.gradle\caches\transforms-1\files-1.1\react-native-0.57.4.aar\57ed19d2358b3919960a0c5a131e3350\AndroidManifest.xml:13:5-20
@@ -147,6 +165,8 @@ MERGED from [com.google.android.gms:play-services-tasks:16.0.1] C:\Users\user\.g
 MERGED from [com.google.android.gms:play-services-tasks:16.0.1] C:\Users\user\.gradle\caches\transforms-1\files-1.1\play-services-tasks-16.0.1.aar\7aaa870cf899f41046d51eb925811af8\AndroidManifest.xml:7:5-20
 MERGED from [com.google.android.gms:play-services-basement:16.0.1] C:\Users\user\.gradle\caches\transforms-1\files-1.1\play-services-basement-16.0.1.aar\f1f517e5e067dbae7f540e6db80636ee\AndroidManifest.xml:22:5-26:19
 MERGED from [com.google.android.gms:play-services-basement:16.0.1] C:\Users\user\.gradle\caches\transforms-1\files-1.1\play-services-basement-16.0.1.aar\f1f517e5e067dbae7f540e6db80636ee\AndroidManifest.xml:22:5-26:19
+MERGED from [com.braintreepayments.api:braintree:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\braintree-2.22.0.aar\4efd1b40c220aa1c4de96395fa0ead98\AndroidManifest.xml:14:5-24:19
+MERGED from [com.braintreepayments.api:braintree:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\braintree-2.22.0.aar\4efd1b40c220aa1c4de96395fa0ead98\AndroidManifest.xml:14:5-24:19
 MERGED from [com.facebook.soloader:soloader:0.5.1] C:\Users\user\.gradle\caches\transforms-1\files-1.1\soloader-0.5.1.aar\64f122f1013cb2bad4635685ad3f98fe\AndroidManifest.xml:11:5-20
 MERGED from [com.facebook.soloader:soloader:0.5.1] C:\Users\user\.gradle\caches\transforms-1\files-1.1\soloader-0.5.1.aar\64f122f1013cb2bad4635685ad3f98fe\AndroidManifest.xml:11:5-20
 MERGED from [org.webkit:android-jsc:r174650] C:\Users\user\.gradle\caches\transforms-1\files-1.1\android-jsc-r174650.aar\50d1ec020098c0388af0542655a26b23\AndroidManifest.xml:2:3-17
@@ -189,6 +209,26 @@ activity#com.facebook.react.devsupport.DevSettingsActivity
 ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:26:7-84
 	android:name
 		ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:26:17-81
+activity#com.braintreepayments.api.BraintreeBrowserSwitchActivity
+ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:28:4-36:15
+	android:launchMode
+		ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:29:3-34
+	android:name
+		ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:28:14-85
+intent-filter#action:name:android.intent.action.VIEW+category:name:android.intent.category.BROWSABLE+category:name:android.intent.category.DEFAULT+data:scheme:com.split_it.braintree
+ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:30:3-35:19
+action#android.intent.action.VIEW
+ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:31:4-64
+	android:name
+		ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:31:12-53
+category#android.intent.category.DEFAULT
+ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:32:4-73
+	android:name
+		ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:32:14-60
+category#android.intent.category.BROWSABLE
+ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:33:4-75
+	android:name
+		ADDED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:33:14-62
 uses-sdk
 INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml
@@ -277,6 +317,8 @@ MERGED from [com.android.support:support-vector-drawable:27.1.1] C:\Users\user\.
 MERGED from [com.android.support:support-vector-drawable:27.1.1] C:\Users\user\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-27.1.1.aar\27dbcc17221ebf25fc89028533fc42fb\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:support-compat:27.1.1] C:\Users\user\.gradle\caches\transforms-1\files-1.1\support-compat-27.1.1.aar\c33a9371c1f1ba83dc27097351eee6b2\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:support-compat:27.1.1] C:\Users\user\.gradle\caches\transforms-1\files-1.1\support-compat-27.1.1.aar\c33a9371c1f1ba83dc27097351eee6b2\AndroidManifest.xml:20:5-44
+MERGED from [com.braintreepayments.api:braintree:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\braintree-2.22.0.aar\4efd1b40c220aa1c4de96395fa0ead98\AndroidManifest.xml:7:5-9:41
+MERGED from [com.braintreepayments.api:braintree:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\braintree-2.22.0.aar\4efd1b40c220aa1c4de96395fa0ead98\AndroidManifest.xml:7:5-9:41
 MERGED from [com.facebook.fresco:fresco:1.10.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\fresco-1.10.0.aar\75020597a6bd88d5708512b6baf457e6\AndroidManifest.xml:5:5-7:41
 MERGED from [com.facebook.fresco:fresco:1.10.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\fresco-1.10.0.aar\75020597a6bd88d5708512b6baf457e6\AndroidManifest.xml:5:5-7:41
 MERGED from [com.facebook.fresco:imagepipeline-okhttp3:1.10.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\imagepipeline-okhttp3-1.10.0.aar\8bfff0ec42d36aa37ff1796b2e245a0d\AndroidManifest.xml:5:5-7:41
@@ -291,12 +333,24 @@ MERGED from [com.facebook.soloader:soloader:0.5.1] C:\Users\user\.gradle\caches\
 MERGED from [com.facebook.soloader:soloader:0.5.1] C:\Users\user\.gradle\caches\transforms-1\files-1.1\soloader-0.5.1.aar\64f122f1013cb2bad4635685ad3f98fe\AndroidManifest.xml:7:5-9:41
 MERGED from [com.rmtheis:tess-two:7.0.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\tess-two-7.0.0.aar\b02ba9c912fb9388aa2e903cbddf9e19\AndroidManifest.xml:22:5-24:41
 MERGED from [com.rmtheis:tess-two:7.0.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\tess-two-7.0.0.aar\b02ba9c912fb9388aa2e903cbddf9e19\AndroidManifest.xml:22:5-24:41
+MERGED from [com.braintreepayments.api:google-payment:1.0.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\google-payment-1.0.0.aar\7664e497b8af37f181b9df02f071b1a6\AndroidManifest.xml:7:5-9:41
+MERGED from [com.braintreepayments.api:google-payment:1.0.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\google-payment-1.0.0.aar\7664e497b8af37f181b9df02f071b1a6\AndroidManifest.xml:7:5-9:41
+MERGED from [com.braintreepayments.api:visa-checkout:1.0.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\visa-checkout-1.0.0.aar\86a8595253864cbee9509dd54a299a80\AndroidManifest.xml:8:5-10:41
+MERGED from [com.braintreepayments.api:visa-checkout:1.0.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\visa-checkout-1.0.0.aar\86a8595253864cbee9509dd54a299a80\AndroidManifest.xml:8:5-10:41
+MERGED from [com.paypal.android.sdk:paypal-one-touch:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\paypal-one-touch-2.22.0.aar\c6b100afbb07bf5af3272315efb8e974\AndroidManifest.xml:7:5-9:41
+MERGED from [com.paypal.android.sdk:paypal-one-touch:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\paypal-one-touch-2.22.0.aar\c6b100afbb07bf5af3272315efb8e974\AndroidManifest.xml:7:5-9:41
+MERGED from [com.braintreepayments.api:core:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\core-2.22.0.aar\945a090ed4116fdfbf16df7c717b6b7a\AndroidManifest.xml:7:5-9:41
+MERGED from [com.braintreepayments.api:core:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\core-2.22.0.aar\945a090ed4116fdfbf16df7c717b6b7a\AndroidManifest.xml:7:5-9:41
 MERGED from [com.facebook.fresco:fbcore:1.10.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\fbcore-1.10.0.aar\0cf8ef883cafece5a8dc3d0572c9d096\AndroidManifest.xml:5:5-7:41
 MERGED from [com.facebook.fresco:fbcore:1.10.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\fbcore-1.10.0.aar\0cf8ef883cafece5a8dc3d0572c9d096\AndroidManifest.xml:5:5-7:41
 MERGED from [android.arch.lifecycle:runtime:1.1.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\a952509b4f0a74a375ded09ed1bd7d0e\AndroidManifest.xml:20:5-44
 MERGED from [android.arch.lifecycle:runtime:1.1.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\a952509b4f0a74a375ded09ed1bd7d0e\AndroidManifest.xml:20:5-44
 MERGED from [com.google.android.gms:play-services-measurement-base:16.0.3] C:\Users\user\.gradle\caches\transforms-1\files-1.1\play-services-measurement-base-16.0.3.aar\c23111cba27a145f7c53aeb3407f07df\AndroidManifest.xml:5:5-44
 MERGED from [com.google.android.gms:play-services-measurement-base:16.0.3] C:\Users\user\.gradle\caches\transforms-1\files-1.1\play-services-measurement-base-16.0.3.aar\c23111cba27a145f7c53aeb3407f07df\AndroidManifest.xml:5:5-44
+MERGED from [com.braintreepayments:browser-switch:0.1.6] C:\Users\user\.gradle\caches\transforms-1\files-1.1\browser-switch-0.1.6.aar\b976f0f421e981102f2fc65410a0d474\AndroidManifest.xml:7:5-9:41
+MERGED from [com.braintreepayments:browser-switch:0.1.6] C:\Users\user\.gradle\caches\transforms-1\files-1.1\browser-switch-0.1.6.aar\b976f0f421e981102f2fc65410a0d474\AndroidManifest.xml:7:5-9:41
+MERGED from [com.paypal.android.sdk:data-collector:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\data-collector-2.22.0.aar\6a510ece6412743824b4f0b72ed4da61\AndroidManifest.xml:7:5-9:41
+MERGED from [com.paypal.android.sdk:data-collector:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\data-collector-2.22.0.aar\6a510ece6412743824b4f0b72ed4da61\AndroidManifest.xml:7:5-9:41
 MERGED from [android.arch.lifecycle:livedata-core:1.1.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.0.aar\933d8937a8da16089d9bb4f30f2824b1\AndroidManifest.xml:20:5-44
 MERGED from [android.arch.lifecycle:livedata-core:1.1.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.0.aar\933d8937a8da16089d9bb4f30f2824b1\AndroidManifest.xml:20:5-44
 MERGED from [android.arch.core:runtime:1.1.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\af81ff9075ddd031ce438b02375d13b4\AndroidManifest.xml:20:5-44
@@ -351,6 +405,8 @@ MERGED from [com.google.firebase:firebase-analytics-impl:16.2.2] C:\Users\user\.
 MERGED from [com.google.firebase:firebase-analytics-impl:16.2.2] C:\Users\user\.gradle\caches\transforms-1\files-1.1\firebase-analytics-impl-16.2.2.aar\698ea2573e08ba3f2ed6c48380b2afa0\AndroidManifest.xml:24:5-79
 MERGED from [com.google.firebase:firebase-iid:17.0.3] C:\Users\user\.gradle\caches\transforms-1\files-1.1\firebase-iid-17.0.3.aar\882b3aed98ffdd9ca9dedf0ea1f4cce0\AndroidManifest.xml:22:5-79
 MERGED from [com.google.firebase:firebase-iid:17.0.3] C:\Users\user\.gradle\caches\transforms-1\files-1.1\firebase-iid-17.0.3.aar\882b3aed98ffdd9ca9dedf0ea1f4cce0\AndroidManifest.xml:22:5-79
+MERGED from [com.braintreepayments.api:braintree:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\braintree-2.22.0.aar\4efd1b40c220aa1c4de96395fa0ead98\AndroidManifest.xml:11:5-79
+MERGED from [com.braintreepayments.api:braintree:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\braintree-2.22.0.aar\4efd1b40c220aa1c4de96395fa0ead98\AndroidManifest.xml:11:5-79
 	android:name
 		ADDED from [:rn-fetch-blob] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\rn-fetch-blob\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:27:22-76
 uses-permission#android.permission.ACCESS_WIFI_STATE
@@ -380,7 +436,7 @@ ADDED from [:rn-fetch-blob] C:\Users\user\Documents\DIT Data Backup\Final Year\F
 	android:name
 		ADDED from [:rn-fetch-blob] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\rn-fetch-blob\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:42:17-67
 uses-permission#android.permission.READ_EXTERNAL_STORAGE
-IMPLIED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-29:12 reason: com.reactlibrary requested WRITE_EXTERNAL_STORAGE
+IMPLIED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-39:12 reason: com.reactlibrary requested WRITE_EXTERNAL_STORAGE
 meta-data#com.google.firebase.ml.vision.DEPENDENCIES
 ADDED from [:react-native-text-detector] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\react-native-text-detector\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:11:5-13:31
 	android:value
@@ -513,5 +569,25 @@ ADDED from [com.google.android.gms:play-services-basement:16.0.1] C:\Users\user\
 		ADDED from [com.google.android.gms:play-services-basement:16.0.1] C:\Users\user\.gradle\caches\transforms-1\files-1.1\play-services-basement-16.0.1.aar\f1f517e5e067dbae7f540e6db80636ee\AndroidManifest.xml:25:13-66
 	android:name
 		ADDED from [com.google.android.gms:play-services-basement:16.0.1] C:\Users\user\.gradle\caches\transforms-1\files-1.1\play-services-basement-16.0.1.aar\f1f517e5e067dbae7f540e6db80636ee\AndroidManifest.xml:24:13-58
+activity#com.braintreepayments.api.AndroidPayActivity
+ADDED from [com.braintreepayments.api:braintree:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\braintree-2.22.0.aar\4efd1b40c220aa1c4de96395fa0ead98\AndroidManifest.xml:15:9-17:62
+	android:theme
+		ADDED from [com.braintreepayments.api:braintree:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\braintree-2.22.0.aar\4efd1b40c220aa1c4de96395fa0ead98\AndroidManifest.xml:17:13-59
+	android:name
+		ADDED from [com.braintreepayments.api:braintree:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\braintree-2.22.0.aar\4efd1b40c220aa1c4de96395fa0ead98\AndroidManifest.xml:16:13-72
+activity#com.braintreepayments.api.GooglePaymentActivity
+ADDED from [com.braintreepayments.api:braintree:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\braintree-2.22.0.aar\4efd1b40c220aa1c4de96395fa0ead98\AndroidManifest.xml:18:9-20:62
+	android:theme
+		ADDED from [com.braintreepayments.api:braintree:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\braintree-2.22.0.aar\4efd1b40c220aa1c4de96395fa0ead98\AndroidManifest.xml:20:13-59
+	android:name
+		ADDED from [com.braintreepayments.api:braintree:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\braintree-2.22.0.aar\4efd1b40c220aa1c4de96395fa0ead98\AndroidManifest.xml:19:13-75
+activity#com.braintreepayments.api.threedsecure.ThreeDSecureWebViewActivity
+ADDED from [com.braintreepayments.api:braintree:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\braintree-2.22.0.aar\4efd1b40c220aa1c4de96395fa0ead98\AndroidManifest.xml:21:9-103
+	android:name
+		ADDED from [com.braintreepayments.api:braintree:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\braintree-2.22.0.aar\4efd1b40c220aa1c4de96395fa0ead98\AndroidManifest.xml:21:19-100
+service#com.braintreepayments.api.internal.AnalyticsIntentService
+ADDED from [com.braintreepayments.api:braintree:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\braintree-2.22.0.aar\4efd1b40c220aa1c4de96395fa0ead98\AndroidManifest.xml:23:9-93
+	android:name
+		ADDED from [com.braintreepayments.api:braintree:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\braintree-2.22.0.aar\4efd1b40c220aa1c4de96395fa0ead98\AndroidManifest.xml:23:18-90
 uses-permission#android.permission.READ_PHONE_STATE
-IMPLIED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-29:12 reason: org.webkit.android_jsc has a targetSdkVersion < 4
+IMPLIED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-39:12 reason: org.webkit.android_jsc has a targetSdkVersion < 4

@@ -14,6 +14,7 @@ export default class Payment extends Component<Props>{
 
     constructor(props){
         super(props);
+
     }
 
     render(){       
@@ -21,7 +22,7 @@ export default class Payment extends Component<Props>{
             <View style={styles.modalView}>
                 <View style={ styles.modalView }>
                     <WebView
-                        source={{uri: 'https://perfect-moose-52.localtunnel.me/', method: 'POST'}}//'https://splitit.localtunnel.me/', method: 'POST', body: 'cat=himalayan&dog=pug&fish=shark'}}
+                        source={{uri: 'http://58e6e319.ngrok.io/'}}//'https://splitit.localtunnel.me/', method: 'POST', body: 'cat=himalayan&dog=pug&fish=shark'}}
                         
                         onNavigationStateChange = {data => {                          
                             console.log(data)

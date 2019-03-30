@@ -16,7 +16,6 @@ console.disableYellowBox = true;
 
 const navigate = createStackNavigator({
   Home: { screen: Home },
-  Loading: { screen : Loading },
   Login: { screen : Login },
   Register: { screen : Register }, 
   Camera: { screen: Camera },

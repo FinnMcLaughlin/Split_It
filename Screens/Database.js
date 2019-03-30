@@ -133,36 +133,75 @@ export default class Database extends Component<Props>{
         return displayName;
     }
 
-    _setRemainingPrice(id, remainingPrice){
-        //Set initial remaining price calculated using generated item list prices
-        const _table = "Rooms/" + id;
-        
-        firebase.database().ref(_table).child("/PriceValues").set({
-            remainingBillPrice: remainingPrice
+    _initUserBillData(billID, userID){
+        const _table = "Rooms/" + billID + "/users/" + userID;
+
+        firebase.database().ref(_table).set({
+            finishedChoosing: false,
+            finishedPaying: false
         });
     }
 
-    _updateRemainingPrice(id, userTotalPrice, rejectItem){
-        const _table = "Rooms/" + id + "/PriceValues";
+    _updateUserBillData(billID, userID, info, value){
+        const _table = "Rooms/" + billID + "/users/" + userID;
+
+        firebase.database().ref(_table).update({
+            [info]: value 
+        });
+    }
+
+    _setTotalPrice(id, billTotal){
+        //Set initial remaining price calculated using generated item list prices
+        const _table = "Rooms/" + id + "/priceValues/billTotal";
+        
+        firebase.database().ref(_table).set({
+            value: billTotal.toFixed(2)
+        });
+    }
+
+    _setCaclulateTotalPrice(id, calculatedTotal){
+        //Set initial remaining price calculated using generated item list prices
+        const _table = "Rooms/" + id + "/priceValues/calculatedTotal";
+        
+        firebase.database().ref(_table).set({
+            value: calculatedTotal.toFixed(2)
+        });
+    }
+
+    _setRemainingTotal(id, remainingTotal){
+        //Set initial remaining price calculated using generated item list prices
+        const _table = "Rooms/" + id + "/priceValues/remainingBillPrice";
+        var val = remainingTotal.toFixed(2)
+        
+        firebase.database().ref(_table).set({
+            value: val
+        });
+    }
+
+    _updateRemainingTotal(id, items){
+        const _table = "Rooms/" + id + "/priceValues/calculatedTotal";
         let newRemainingBillPrice = 0;
+        let chosenItemsTotalPrice = 0;
+        let dis = this;
 
         firebase.database().ref(_table).once('value', function(snapshot){
-            //If item has already been chosen, then add that items price back to remaining Bill Price
-            if(rejectItem){
-                console.log("Rejected Item Cost: " + userTotalPrice);
-                newRemainingBillPrice = parseFloat(snapshot.val().remainingBillPrice) + userTotalPrice;
-            }
-            //If item has not been chosen yet, take item price from remaining Bill Price
-            else{
-                console.log("Item Cost: " + userTotalPrice);
-                newRemainingBillPrice = parseFloat(snapshot.val().remainingBillPrice) - userTotalPrice;
-            }
+            var currentRemainingPrice = snapshot.val().value;
 
-            console.log("Remaining Price: " + newRemainingBillPrice);    
-            //Update remaining Bill Price in Database
-            firebase.database().ref(_table).update({
-                remainingBillPrice: newRemainingBillPrice
-            });
+            for(var itemIndex=0; itemIndex < items.length; itemIndex++){
+                var chosenByInfo = items[itemIndex].data.chosenBy;
+                var itemPrice = items[itemIndex].data.price
+        
+                if(chosenByInfo[0] != ""){
+                    chosenItemsTotalPrice = chosenItemsTotalPrice + parseFloat(itemPrice);
+                    //console.log("Index: " + itemIndex + " " + chosenByInfo);
+                }
+            }
+            
+            newRemainingBillPrice = parseFloat(currentRemainingPrice) - chosenItemsTotalPrice;
+            console.log("New Price: " + newRemainingBillPrice.toFixed(2));
+            console.log(" ");
+    
+            dis._setRemainingTotal(id, newRemainingBillPrice);
         });
     }
 
@@ -173,7 +212,7 @@ export default class Database extends Component<Props>{
         firebase.database().ref(_table + "/chosenBy").on('value', function(snapshot){
             existingData = snapshot.val();     
         });
-        
+
         //If current user is not in the existing array of UIDs, begin adding them to the array
         if(!existingData.includes(uid)){
             //Check if the array consists of an empty string i.e. no current users

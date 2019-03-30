@@ -159,6 +159,9 @@ dependencies {
         exclude group: 'com.google.firebase'
     }
 	
+	implementation 'com.braintreepayments.api:braintree:2.+'
+	
+	
 	implementation fileTree(dir: "libs", include: ["*.jar"])
 }
 

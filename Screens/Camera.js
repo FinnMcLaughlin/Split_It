@@ -17,8 +17,6 @@ import { gray } from 'ansi-colors';
 
 var AWS = require('aws-sdk/react-native');
 
-AWS.config.region = 'eu-west-1';
-
 
 function formatOCROutput(data){
   let TD = data.TextDetections;
@@ -219,8 +217,8 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'flex-end',
       alignItems: 'center',
-      height: Dimensions.get('window').height - 125,
-      width: Dimensions.get('window').width
+      height: 3 * Dimensions.get('screen').width / 4,
+      width: Dimensions.get('screen').width       
     },
     button_view: {
       flex: 0,
@@ -230,8 +228,8 @@ const styles = StyleSheet.create({
       alignSelf: 'center',
     },
     preview: {
-      height: Dimensions.get('window').height - 125,
-      width: Dimensions.get('window').width
+      height: Dimensions.get('screen').height,
+      width: Dimensions.get('screen').width
     }
   });
   

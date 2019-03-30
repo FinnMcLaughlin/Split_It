@@ -504,12 +504,12 @@
         "source": "C:\\Users\\user\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\a1748128170e48a96b0b52be356f7bc2\\res\\drawable-mdpi-v4\\abc_ic_menu_cut_mtrl_alpha.png"
     },
     {
-        "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxxhdpi-v4_abc_btn_radio_to_on_mtrl_000.png.flat",
-        "source": "C:\\Users\\user\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\a1748128170e48a96b0b52be356f7bc2\\res\\drawable-xxxhdpi-v4\\abc_btn_radio_to_on_mtrl_000.png"
-    },
-    {
         "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxxhdpi-v4_abc_scrubber_control_to_pressed_mtrl_000.png.flat",
         "source": "C:\\Users\\user\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\a1748128170e48a96b0b52be356f7bc2\\res\\drawable-xxxhdpi-v4\\abc_scrubber_control_to_pressed_mtrl_000.png"
+    },
+    {
+        "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxxhdpi-v4_abc_btn_radio_to_on_mtrl_000.png.flat",
+        "source": "C:\\Users\\user\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\a1748128170e48a96b0b52be356f7bc2\\res\\drawable-xxxhdpi-v4\\abc_btn_radio_to_on_mtrl_000.png"
     },
     {
         "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\layout_abc_list_menu_item_layout.xml.flat",
@@ -554,6 +554,10 @@
     {
         "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable_common_google_signin_btn_text_dark_normal.xml.flat",
         "source": "C:\\Users\\user\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-16.0.1.aar\\77027e5ba8b3520502ca70fc4581baca\\res\\drawable\\common_google_signin_btn_text_dark_normal.xml"
+    },
+    {
+        "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi_ic_launcher_1.png.flat",
+        "source": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher_1.png"
     },
     {
         "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4_common_google_signin_btn_icon_dark_normal_background.9.png.flat",
@@ -686,6 +690,10 @@
     {
         "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4_abc_scrubber_primary_mtrl_alpha.9.png.flat",
         "source": "C:\\Users\\user\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\a1748128170e48a96b0b52be356f7bc2\\res\\drawable-hdpi-v4\\abc_scrubber_primary_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xhdpi_ic_launcher_1.png.flat",
+        "source": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher_1.png"
     },
     {
         "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_abc_textfield_search_activated_mtrl_alpha.9.png.flat",
@@ -858,6 +866,10 @@
     {
         "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\color-v23_abc_tint_btn_checkable.xml.flat",
         "source": "C:\\Users\\user\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\a1748128170e48a96b0b52be356f7bc2\\res\\color-v23\\abc_tint_btn_checkable.xml"
+    },
+    {
+        "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxhdpi_ic_launcher_1.png.flat",
+        "source": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher_1.png"
     },
     {
         "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\layout_notification_template_big_media_custom.xml.flat",
@@ -1168,6 +1180,10 @@
         "source": "C:\\Users\\user\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\a1748128170e48a96b0b52be356f7bc2\\res\\color-v23\\abc_btn_colored_text_material.xml"
     },
     {
+        "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\raw_delete_payment_method_mutation.graphql.flat",
+        "source": "C:\\Users\\user\\.gradle\\caches\\transforms-1\\files-1.1\\braintree-2.22.0.aar\\4efd1b40c220aa1c4de96395fa0ead98\\res\\raw\\delete_payment_method_mutation.graphql"
+    },
+    {
         "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable_abc_ic_clear_material.xml.flat",
         "source": "C:\\Users\\user\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\a1748128170e48a96b0b52be356f7bc2\\res\\drawable\\abc_ic_clear_material.xml"
     },
@@ -1452,6 +1468,10 @@
         "source": "C:\\Users\\user\\.gradle\\caches\\transforms-1\\files-1.1\\support-media-compat-27.1.0.aar\\345d793932d1722f188ef21e42e55afc\\res\\layout\\notification_template_big_media_narrow_custom.xml"
     },
     {
+        "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi_ic_launcher_1.png.flat",
+        "source": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher_1.png"
+    },
+    {
         "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\layout_abc_screen_content_include.xml.flat",
         "source": "C:\\Users\\user\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\a1748128170e48a96b0b52be356f7bc2\\res\\layout\\abc_screen_content_include.xml"
     },
@@ -1564,12 +1584,12 @@
         "source": "C:\\Users\\user\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\a1748128170e48a96b0b52be356f7bc2\\res\\anim\\abc_fade_out.xml"
     },
     {
-        "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\anim_abc_slide_in_top.xml.flat",
-        "source": "C:\\Users\\user\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\a1748128170e48a96b0b52be356f7bc2\\res\\anim\\abc_slide_in_top.xml"
-    },
-    {
         "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4_abc_list_selector_disabled_holo_dark.9.png.flat",
         "source": "C:\\Users\\user\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\a1748128170e48a96b0b52be356f7bc2\\res\\drawable-xxhdpi-v4\\abc_list_selector_disabled_holo_dark.9.png"
+    },
+    {
+        "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\anim_abc_slide_in_top.xml.flat",
+        "source": "C:\\Users\\user\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\a1748128170e48a96b0b52be356f7bc2\\res\\anim\\abc_slide_in_top.xml"
     },
     {
         "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\anim_design_bottom_sheet_slide_out.xml.flat",
@@ -1630,6 +1650,10 @@
     {
         "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\layout_abc_list_menu_item_icon.xml.flat",
         "source": "C:\\Users\\user\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\a1748128170e48a96b0b52be356f7bc2\\res\\layout\\abc_list_menu_item_icon.xml"
+    },
+    {
+        "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\raw_tokenize_credit_card_mutation.graphql.flat",
+        "source": "C:\\Users\\user\\.gradle\\caches\\transforms-1\\files-1.1\\braintree-2.22.0.aar\\4efd1b40c220aa1c4de96395fa0ead98\\res\\raw\\tokenize_credit_card_mutation.graphql"
     },
     {
         "merged": "C:\\Users\\user\\Documents\\DIT Data Backup\\Final Year\\FYP\\split_it\\android\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4_abc_spinner_mtrl_am_alpha.9.png.flat",
