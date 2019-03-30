@@ -122,24 +122,21 @@ export default class Camera extends Component<Props>{
       
       var rekt = new AWS.Rekognition();
       
-      var newRoom = "J3LW";  
+      var newRoom = "AKZD";  
       let uid = this.state.user_id;
+      let navigate = this.props.navigation;
+      let dis = this;
 
       rekt.detectText(params, function(err, data) {      
         if (err) console.log(err, err.stack);
         else {
+          console.log("HERE");
+          
           var content = formatOCROutput(data)
-
-          firebase.database().ref(`Rooms/${newRoom}`).set({
-            content: content,
-            host: uid
-          });
+          dis.DB._billIDGen(navigate, content);
+          
         }
       });
-
-      //this.DB._billIDGen();
-      console.log(this.state.picture_uri);
-      this.props.navigation.navigate("Results", newRoom);
     });
   }
 
@@ -186,7 +183,7 @@ export default class Camera extends Component<Props>{
           <View>
                   <Button
                     onPress={() => console.log("Accept Picture"), this._formatPicture.bind(this)}
-                    style = {styles.button}
+                    style = {styles.prevButton}
                     title = "Accept Picture">
                   </Button>
             </View>            

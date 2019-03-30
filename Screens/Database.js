@@ -20,18 +20,32 @@ type Props = {};
 export default class Database extends Component<Props>{
     constructor(props)
     {
-        super(props);      
+        super(props);
+
+        this.state = {
+            hostID: "",
+            hostPayPal: ""
+        }
     }
     
-    _RegisterUser(email, password, name){
-        console.log("Email", email);
+    _RegisterUser(email, password, name, paypal_email, context){
+        let nav = context;
+
         firebase.auth().createUserWithEmailAndPassword(email, password)
         .then(() => {
-            firebase.auth().currentUser.updateProfile({displayName: name});
+            //firebase.auth().currentUser.updateProfile({displayName: name});
             const uid = firebase.auth().currentUser.uid;
-            this.DB._newUser(uid, email, name);
-            this.props.navigation.navigate("Home"), 
-            console.log("Success")})
+            var _table = "Users/" + uid;
+            
+            firebase.database().ref(_table).set({
+                account_email: email,
+                name: name,
+                paypal_email: paypal_email
+            }).then(() => {
+                console.log("User Registered");
+                nav.navigate("Login");
+            });        
+        });
     }
 
     // _DisplayFromDatabase(table, uid, props){
@@ -66,7 +80,7 @@ export default class Database extends Component<Props>{
         return firebase.database().ref(`Rooms/${billID}/content`).once("value");
     }
 
-    _billIDGen(){
+    _billIDGen(navigate, data, hostID){
         const ID_chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         var ID = "";
         var idLength = 4;        
@@ -83,8 +97,9 @@ export default class Database extends Component<Props>{
         this._findBillID(ID.toUpperCase()).then((snapshot) => {
             if(snapshot.val() == null){
                 console.log("Unique ID: " + ID);
-                this._createNewRoom(ID).then(() => {
+                this._createNewRoom(ID, data).then(() => {
                     console.log("Room Created");
+                    navigate.navigate("Register");
                 });
             }
             else{
@@ -94,9 +109,13 @@ export default class Database extends Component<Props>{
         });
     }
 
-    _createNewRoom(billID){
+    _createNewRoom(billID, data){
         return firebase.database().ref(`Rooms/${billID}`).set({
-            Host: firebase.auth().currentUser.uid
+            content: data
+        }).then(() => {
+                firebase.database().ref(`Rooms/${billID}/host`).set({
+                hostID: firebase.auth().currentUser.uid
+            });
         });
     }
 
@@ -147,6 +166,29 @@ export default class Database extends Component<Props>{
 
         firebase.database().ref(_table).update({
             [info]: value 
+        });
+    }
+
+    _initHostData(){
+        //Initialize
+    }
+
+    _getHostPaypalAccount(billID, userID, info, value){
+        const host_path = "Rooms/" + billID + "/host";
+        const user_path = "Users";
+        let dis = this;
+        
+        firebase.database().ref(user_path).once('value', function(snapshot){
+            
+            Object.keys(snapshot.val()).forEach(user =>{
+                if(user == userID){
+                    dis.state.hostPayPal = snapshot.val()[user].paypal_email;
+                }
+            });
+        }).then(() => {
+            firebase.database().ref(host_path).update({
+                hostPayPalEmail: dis.state.hostPayPal
+            });
         });
     }
 

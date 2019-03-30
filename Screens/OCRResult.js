@@ -19,10 +19,12 @@ export default class OCRResult extends Component<Props>{
         this.DB = new Database();
 
         this.state = {
-            billID: this.props.navigation.state.params,
+            billID: "J3LW",//this.props.navigation.state.params,
             userID: firebase.auth().currentUser.uid,
             userInit: false,
-            isHost: true,
+            isHost: false,
+            hostPaypal: "",
+            hostPaypalInit: false,
             data: "",
             dataLoaded: false,
 
@@ -48,18 +50,39 @@ export default class OCRResult extends Component<Props>{
             remainingValue_TotalValueEqual: false,
 
             userBillPrice: 0.00,   
+            userFinalBillPrice: 0.00
         }
 
         let dis = this;
 
-        if(this.state.userID != undefined && !this.state.userInit){
-          this.DB._initUserBillData(this.state.billID, this.state.userID);
-          this.setState({userInit: true});
+        if(this.state.userID != undefined){
+          if(!this.state.userInit){
+            this.DB._initUserBillData(this.state.billID, this.state.userID);
+            this.setState({userInit: true});
+          }          
+
+          if(!this.state.hostPaypalInit){
+            if(this.state.isHost){
+              this.DB._getHostPaypalAccount(this.state.billID, this.state.userID);
+              this.setState({hostPaypalInit: true});
+            }
+            else{
+              firebase.database().ref(`Rooms/${this.state.billID}/host`).on('value', function(snapshot){
+                if(snapshot.val().hostPayPalEmail != null){
+                  console.log("Host Email " + snapshot.val().hostPayPalEmail)
+                  dis.state.hostPaypal = snapshot.val().hostPayPalEmail;
+                  dis.state.hostPaypalInit = true;
+                }
+              });
+            }
+            
+          }
         }
 
+        //Merge Host Info
         firebase.database().ref(`Rooms/${this.state.billID}/host`).on('value', function(snapshot){
             if(snapshot.val() != dis.state.userID){
-              dis.setState({isHost: false});
+              dis.state.isHost = false;
             }
         });
         
@@ -113,9 +136,21 @@ export default class OCRResult extends Component<Props>{
         firebase.database().ref(`Rooms/${this.state.billID}/users`).on('value', function(snapshot){
           if(snapshot.val() != null){
             var values = snapshot.val();
+            var currentUser = dis.state.userID;
             var no_users = 0;
             var no_finished_users = 0;
             var remaining_users = [];
+           
+            if(values[currentUser].itemsChosenTotal != null){
+              var chosenItemsTotal = values[currentUser].itemsChosenTotal;
+              var calculatedTax = (( chosenItemsTotal / 100) * 5.4 ) + 0.2;
+              var finalTotal = Math.round((chosenItemsTotal + calculatedTax) * 100) / 100;
+
+              dis.setState({
+                userBillPrice: values[currentUser].itemsChosenTotal,
+                userFinalBillPrice: finalTotal
+              });
+            }
 
             Object.keys(values).forEach(user =>{
               no_users += 1;
@@ -125,9 +160,9 @@ export default class OCRResult extends Component<Props>{
               }
             });
 
-            if(no_users == no_finished_users){
+            if(no_users == no_finished_users && dis.state.hostPaypalInit){
               dis.setState({reviewModalVisible: false});
-              dis.props.navigation.navigate("Payment");
+              dis.props.navigation.navigate("Payment", {finalTotal: dis.state.userFinalBillPrice, hostAccount: dis.state.hostPaypal});
             }
           }
         });
@@ -170,18 +205,7 @@ export default class OCRResult extends Component<Props>{
         }   
       }
 
-      this.setState({
-        userBillPrice: newUserBillPrice.toFixed(2),
-      });
-
-      if(previousUserBillPrice > newUserBillPrice){
-        rejectItem = true;
-        newUserBillPrice = previousUserBillPrice - newUserBillPrice;
-      }
-      else{
-        newUserBillPrice = newUserBillPrice - previousUserBillPrice;
-      }
-
+      this.DB._updateUserBillData(this.state.billID, this.state.userID, "itemsChosenTotal", parseFloat(newUserBillPrice.toFixed(2)));
       this.DB._updateRemainingTotal(this.state.billID, items)
     }
 

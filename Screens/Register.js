@@ -17,53 +17,77 @@ export default class Register extends Component{
         super(props);
 
         this.state = {
-            name: "NAME",
-            email: "EMAIL",
-            password: "PASSWORD"
+            email: "Sign in Email",
+            password: "Sign in Password",
+            name: "Name",
+            paypal_email: "PayPal Account Email"
         };
 
         this.DB = new Database();
     }
 
-    _newUser(email, password, name){
-        this.DB._RegisterUser(email, password, name);
-    }
-
     render(){
         return(
-            <View style={styles.view_style}>
-            <TextInput style={styles.textInputBox} onFocus={() => this.setState({name: ""})}
-            onChangeText = {(name) => this.setState({name})} value= {this.state.name}/>
-            <TextInput style={styles.textInputBox} onFocus={() => this.setState({email: ""})}
-            onChangeText = {(email) => this.setState({email})} value={this.state.email}/>
-            <TextInput style={styles.textInputBox} onFocus={() => this.setState({password: ""})}
-            onChangeText = {(password) => this.setState({password})} value={this.state.password}/>
-            <Button styles={styles.button_style} title='Go' 
-            onPress={() => {this._newUser(this.state.email, this.state.password, this.state.name)}}/>
-           </View>
+            <View>
+                <Text style={styles.headerStyle}>Register User</Text>
+                <View style={styles.inputStyle}>
+                    <TextInput style={styles.textInputStyle} onFocus={() => this.setState({email: ""})}
+                        onChangeText = {(email) => this.setState({email})} value={this.state.email}/>
+                    <TextInput style={styles.textInputStyle} onFocus={() => this.setState({password: ""})}
+                        onChangeText = {(password) => this.setState({password})} value={this.state.password}/>
+                    <TextInput style={styles.textInputStyle} onFocus={() => this.setState({name: ""})}
+                        onChangeText = {(name) => this.setState({name})} value= {this.state.name}/>
+                    <TextInput style={styles.textInputStyle} onFocus={() => this.setState({paypal_email: ""})}
+                        onChangeText = {(paypal_email) => this.setState({paypal_email})} value={this.state.paypal_email}/>
+                </View>
+                <View style={styles.buttonStyle}>
+                    <Button styles={styles.button_style} title='Go' 
+                        onPress={() => {this.DB._RegisterUser(this.state.email, this.state.password, this.state.name, this.state.paypal_email, this.props.navigation)}}/>
+                </View>         
+            </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    view_style:{
-        height: 200,
-        width: 300,
-        marginTop: 80,
-        marginLeft: 40
+    headerStyle: {
+        fontSize: 30,
+        alignItems: "center"
     },
-    textInputBox: {
+    inputStyle: {
+        justifyContent: "space-between",
+        alignItems: "center"
+    },
+    textInputStyle: {
         height: 40,
-        width: 250,
-        padding: 10,
-        marginTop: 35,
-        marginLeft: 15,
+        width: 200,
+        marginTop: 25,
         borderWidth: 1,
-        borderColor: 'blue',
+        borderColor: 'blue'
     },
-    button_style: {
-        height: 30
-    },
+    buttonStyle: {
+        height: 30,
+        marginTop: 20
+    }
+    // view_style:{
+    //     height: 200,
+    //     width: 300,
+    //     marginTop: 80,
+    //     marginLeft: 40
+    // },
+    // textInputBox: {
+    //     height: 40,
+    //     width: 250,
+    //     padding: 10,
+    //     marginTop: 35,
+    //     marginLeft: 15,
+    //     borderWidth: 1,
+    //     borderColor: 'blue',
+    // },
+    // button_style: {
+    //     height: 30,
+    //     marginTop: 35
+    // },
 });
 
 AppRegistry.registerComponent('Register', () => Register);

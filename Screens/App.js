@@ -21,6 +21,7 @@ const navigate = createStackNavigator({
   Camera: { screen: Camera },
   Results: { screen: OCRResult},
   Display: { screen: Display },
+  Database: {screen: Database},
   Payment: { screen: Payment }
 });
 export default navigate;

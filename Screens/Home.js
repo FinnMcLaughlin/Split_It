@@ -52,7 +52,7 @@ export default class Home extends Component<Props>{
 
     componentDidMount(){
         firebase.auth().onAuthStateChanged(user => {(user ? this.setState({ userAuthenticated: true, userDisplayName: this.DB._getCurrentUserDisplayName()}) : this.props.navigation.navigate("Login"))});
-        //firebase.auth().onAuthStateChanged(user => {this.props.navigation.navigate(user ? "Results" : "Login")});
+        //firebase.auth().onAuthStateChanged(user => {this.props.navigation.navigate(user ? "Camera" : "Login")});
     }
   
     _SignOutUser(){

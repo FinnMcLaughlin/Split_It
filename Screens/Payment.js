@@ -15,14 +15,18 @@ export default class Payment extends Component<Props>{
     constructor(props){
         super(props);
 
+        this.state = {
+            userBillTotal: 2.50
+        }
     }
-
+//'https://splitit.localtunnel.me/'
+    
     render(){       
         return(
             <View style={styles.modalView}>
                 <View style={ styles.modalView }>
                     <WebView
-                        source={{uri: 'http://58e6e319.ngrok.io/'}}//'https://splitit.localtunnel.me/', method: 'POST', body: 'cat=himalayan&dog=pug&fish=shark'}}
+                        source={{uri: 'http://729d37d0.ngrok.io/', method: 'POST', body: `price=${this.state.userBillTotal}&host=${this.props.navigation.state.params.hostAccount}`}}
                         
                         onNavigationStateChange = {data => {                          
                             console.log(data)
