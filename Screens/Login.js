@@ -24,7 +24,7 @@ export default class Login extends Component{
     _LoginUser(email, password)
     {
         firebase.auth().signInWithEmailAndPassword(email, password)
-        .then( () => {this.props.navigation.navigate("Home"), console.log("Success ", email)})
+        .then( () => {this.props.navigation.navigate("Home"), console.log("Successfully logged in ", email)})
         .catch( () => {this.props.navigation.navigate("Login"), console.log("Unable to sign in")})
     }
   
@@ -42,7 +42,7 @@ export default class Login extends Component{
                 </View>
                 <View style={styles.button_style}>
                     <Button styles={styles.button_style} title='Register' 
-                    onPress={() => {this.props.navigation.navigate("Register")}}/>
+                    onPress={() => {this.props.navigation.navigate("Register", {err_message: null})}}/>
                 </View>
             </View>
         )

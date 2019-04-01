@@ -1,21 +1,14 @@
 'use strict';
 
-import React, {Component} from 'react';
-import {AppRegistry, Platform, StyleSheet, Text, View, Button, TouchableOpacity, ImageBackground, Dimensions} from 'react-native';
-import {RNCamera} from 'react-native-camera';
+import React, { Component } from 'react';
+import { AppRegistry, Platform, StyleSheet, Text, View, Button, TouchableOpacity, ImageBackground, Dimensions } from 'react-native';
+import { RNCamera } from 'react-native-camera';
 import RNFetchBlob from 'rn-fetch-blob';
 import { Buffer } from 'safe-buffer';
-
-import RNTesseractOcr from 'react-native-tesseract-ocr';
-
-import navigate from './App';
 import firebase from '@firebase/app';
 import Database from './Database';
-import symbolicateStackTrace from 'react-native/Libraries/Core/Devtools/symbolicateStackTrace';
-import { gray } from 'ansi-colors';
 
 
-var AWS = require('aws-sdk/react-native');
 
 
 function formatOCROutput(data){
@@ -96,8 +89,7 @@ function formatOCROutput(data){
 export default class Camera extends Component<Props>{
     static NavigationOptions = {
         title: 'Camera',
-        headerBackTitle: 'Home'
-      };
+    };
     
     constructor(props)
     {
@@ -111,34 +103,6 @@ export default class Camera extends Component<Props>{
 
       this.DB = new Database();
     }
-
-  _formatPicture = async function() {
-    await RNFetchBlob.fs.readFile(this.state.picture_uri, 'base64').then( async (value) => {
-      var params = {
-        Image: {
-          Bytes: new Buffer.from(value, 'base64')
-        }
-      };
-      
-      var rekt = new AWS.Rekognition();
-      
-      var newRoom = "AKZD";  
-      let uid = this.state.user_id;
-      let navigate = this.props.navigation;
-      let dis = this;
-
-      rekt.detectText(params, function(err, data) {      
-        if (err) console.log(err, err.stack);
-        else {
-          console.log("HERE");
-          
-          var content = formatOCROutput(data)
-          dis.DB._billIDGen(navigate, content);
-          
-        }
-      });
-    });
-  }
 
   _TakePicture =  async function() {
       if (this.camera) {
@@ -158,11 +122,35 @@ export default class Camera extends Component<Props>{
       }
   }
 
+  _formatPicture = async function() {
+    await RNFetchBlob.fs.readFile(this.state.picture_uri, 'base64').then( async (value) => {
+      var params = {
+        Image: {
+          Bytes: new Buffer.from(value, 'base64')
+        }
+      };
+      
+      var rekt = new AWS.Rekognition();
+      
+      let uid = this.state.user_id;
+      let navigate = this.props.navigation;
+      let dis = this;
+
+      rekt.detectText(params, function(err, data) {      
+        if (err) console.log(err, err.stack);
+        else {          
+          var content = formatOCROutput(data)
+          dis.DB._billIDGen(navigate, content);
+        }
+      });
+    });
+  }
+
   _renderCamera(){
     if(!this.state.pictureTaken){
       return(
           <RNCamera
-            ref={ref => {this.camera = ref;}}
+            ref={ref => {this.camera = ref}}
             type={RNCamera.Constants.Type.back}
             style={styles.camera}
             autoFocus={RNCamera.Constants.AutoFocus.on}>
@@ -181,90 +169,50 @@ export default class Camera extends Component<Props>{
         <View style={styles.button_view}>
           <ImageBackground source={{uri: this.state.picture_uri}} style={styles.preview}/>
           <View>
-                  <Button
-                    onPress={() => console.log("Accept Picture"), this._formatPicture.bind(this)}
-                    style = {styles.prevButton}
-                    title = "Accept Picture">
-                  </Button>
-            </View>            
+            <Button
+              onPress={() => console.log("Accept Picture"), this._formatPicture.bind(this)}
+              style = {styles.prevButton}
+              title = "Accept Picture">
+            </Button>
+          </View>            
         </View>
       );
     }
   }
 
-    render(){
-        return(
-          <View style={styles.view}>
-            {this._renderCamera()}
-          </View>
-      );
-    }
+  render(){
+      return(
+        <View style={styles.view}>
+          {this._renderCamera()}
+        </View>
+    );
+  }
 }
 
-//require('./FYP_Logo.png')
-//{uri: this.state.picture_uri}
-
 const styles = StyleSheet.create({
-    view: {
-      flex: 1,
-      flexDirection: 'column',
-      backgroundColor: 'black'
-    },
-    camera: {
-      flex: 1,
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-      height: 3 * Dimensions.get('screen').width / 4,
-      width: Dimensions.get('screen').width       
-    },
-    button_view: {
-      flex: 0,
-      flexDirection: 'column'
-    },
-    button: {
-      alignSelf: 'center',
-    },
-    preview: {
-      height: Dimensions.get('screen').height,
-      width: Dimensions.get('screen').width
-    }
-  });
+  view: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: 'black'
+  },
+  camera: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    height: 3 * Dimensions.get('screen').width / 4,
+    width: Dimensions.get('screen').width       
+  },
+  button_view: {
+    flex: 0,
+    flexDirection: 'column'
+  },
+  button: {
+    alignSelf: 'center',
+  },
+  preview: {
+    height: Dimensions.get('screen').height,
+    width: Dimensions.get('screen').width
+  }
+});
   
 AppRegistry.registerComponent('Camera', () => Camera);
-
-
-/*
-
-        _TakePicture =  async function() {
-        if (this.camera) {
-          
-          const options = { quality: 100, base64: true, skipProcessing: true, width:400, height: 500};
-          const data =  await this.camera.takePictureAsync(options)
-          console.log("Raw Data", data);
-
-          await RNFetchBlob.fs.readFile(data.uri, 'base64').then( async (value) => {
-              var params = {
-              Image: {
-                Bytes: new Buffer.from(value, 'base64')
-              }
-            };
-
-            const tessOptions = {
-              whitelist: null, 
-              blacklist: '1234567890\'!"#$%&/()={}[]+*-_:;<>'
-            };
-            
-
-            RNTesseractOcr.recognize(params, "LANG_ENGLISH", tessOptions)
-            .then((result) => {
-              this.setState({ ocrResult: result });
-              console.log("OCR Result: ", result);
-            })
-            .catch((err) => {
-              console.log("OCR Error: ", err);
-            })
-            .done();
-          });
-        }
-    }
-*/

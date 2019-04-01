@@ -21,16 +21,17 @@ export default class OCRResult extends Component<Props>{
         this.state = {
             billID: "J3LW",//this.props.navigation.state.params,
             userID: firebase.auth().currentUser.uid,
+            err_message: "",
+            
             userInit: false,
             isHost: false,
             hostPaypal: "",
             hostPaypalInit: false,
+            
             data: "",
             dataLoaded: false,
 
             editModalVisible: false,
-            reviewModalVisible: false,
-            remainingUsers: [],
             modalItemName: "",
             modalItemPrice: "",
             modalItemIndex: 0,
@@ -39,6 +40,9 @@ export default class OCRResult extends Component<Props>{
             newItemName: "",
             newItemPrice: "",
 
+            reviewModalVisible: false,
+            remainingUsers: [],
+
             totalPrice: 0.00,
             setTotalPrice: false,
 
@@ -46,8 +50,7 @@ export default class OCRResult extends Component<Props>{
             setCTP: false,
 
             remainingTotalBillPrice: 0.00,
-            setRTP: false,
-            remainingValue_TotalValueEqual: false,
+            RTP_equal_TP: false,
 
             userBillPrice: 0.00,   
             userFinalBillPrice: 0.00
@@ -55,87 +58,76 @@ export default class OCRResult extends Component<Props>{
 
         let dis = this;
 
-        if(this.state.userID != undefined){
-          if(!this.state.userInit){
-            this.DB._initUserBillData(this.state.billID, this.state.userID);
-            this.setState({userInit: true});
-          }          
+        firebase.database().ref(`Rooms/${this.state.billID}/host`).once('value', function(hostInfo){
+          var hostInfo = hostInfo.val();
 
-          if(!this.state.hostPaypalInit){
-            if(this.state.isHost){
-              this.DB._getHostPaypalAccount(this.state.billID, this.state.userID);
-              this.setState({hostPaypalInit: true});
-            }
-            else{
-              firebase.database().ref(`Rooms/${this.state.billID}/host`).on('value', function(snapshot){
-                if(snapshot.val().hostPayPalEmail != null){
-                  console.log("Host Email " + snapshot.val().hostPayPalEmail)
-                  dis.state.hostPaypal = snapshot.val().hostPayPalEmail;
-                  dis.state.hostPaypalInit = true;
-                }
-              });
-            }
-            
+          if(hostInfo.hostID == dis.state.userID){
+            dis.state.isHost = true;
           }
-        }
 
-        //Merge Host Info
-        firebase.database().ref(`Rooms/${this.state.billID}/host`).on('value', function(snapshot){
-            if(snapshot.val() != dis.state.userID){
-              dis.state.isHost = false;
+          dis.DB._initUserBillData(dis.state.billID, dis.state.userID); 
+  
+          if(dis.state.isHost){
+            dis.DB._getHostPaypalAccount(dis.state.billID, dis.state.userID);
+          }
+          else{
+            if(hostInfo.hostPayPalEmail != null){
+              dis.state.hostPaypal = hostInfo.hostPayPalEmail;
             }
-        });
+          }
+        }); //Add Error Check
         
-        firebase.database().ref(`Rooms/${this.state.billID}/content`).on('value', function(snapshot){                 
-            if(!dis.state.setCTP){
-              dis._calculateRemainingBillPrice(snapshot.val());
-            }
+        firebase.database().ref(`Rooms/${this.state.billID}/content`).on('value', function(itemInfo){  
+          var itemInfo = itemInfo.val();
 
-            if(dis.state.remainingValue_TotalValueEqual){
-              dis._calculateUserBillPrice(snapshot.val());
-            }
+          if(!dis.state.setCTP){
+            dis._calculateRemainingBillPrice(itemInfo);
+          }
 
-            if(snapshot.val() != null){
-              dis.setState({
-                data: snapshot.val(),
-                dataLoaded: true
-              });
-            }
-        });
+          if(dis.state.RTP_equal_TP){
+            dis._calculateUserBillPrice(itemInfo);
+          }
 
-        firebase.database().ref(`Rooms/${this.state.billID}/priceValues`).on('value', function(snapshot){          
-            //console.log(snapshot.val()) 
-            var equal;
+          if(itemInfo != null){
+            dis.state.data = itemInfo;
+            dis.state.dataLoaded = true;
+          }
+        }); //
 
-            if(snapshot.val().billTotal != null){
-              dis.setState({totalPrice: snapshot.val().billTotal.value})
-            }
+        firebase.database().ref(`Rooms/${this.state.billID}/priceValues`).on('value', function(priceValues){   
+          var priceValues = priceValues.val();
+          
+          if(priceValues.billTotal != null){
+            dis.setState({totalPrice: priceValues.billTotal.value})
+          }
 
-            if(snapshot.val().calculatedTotal != null){
-              dis.setState({calculatedTotalPrice: snapshot.val().calculatedTotal.value})     
-            }
+          if(priceValues.calculatedTotal != null){
+            dis.setState({calculatedTotalPrice: priceValues.calculatedTotal.value})     
+          }
 
-            if(snapshot.val().remainingBillPrice != null){
-              dis.setState({remainingTotalBillPrice: snapshot.val().remainingBillPrice.value})
-            }
+          if(priceValues.remainingBillPrice != null){
+            dis.setState({remainingTotalBillPrice: priceValues.remainingBillPrice.value})
+          }
 
-            if(!dis.state.remainingValue_TotalValueEqual){
-              if(snapshot.val().billTotal != null && snapshot.val().calculatedTotal != null){
-                if(snapshot.val().billTotal.value == snapshot.val().calculatedTotal.value){
-                  equal = true;
-                }
-                else{
-                  equal = false;
-                }
+          if(!dis.state.RTP_equal_TP){
+            if(priceValues.billTotal != null && priceValues.calculatedTotal != null){
+              var equal;
               
-              dis.setState({remainingValue_TotalValueEqual: equal});
+              if(priceValues.billTotal.value == priceValues.calculatedTotal.value){
+                equal = true;
+              }
+              else{
+                equal = false;
+              }
+            
+              dis.setState({RTP_equal_TP: equal});
             }
           }
-        });
+        }); //
 
-        firebase.database().ref(`Rooms/${this.state.billID}/users`).on('value', function(snapshot){
-          if(snapshot.val() != null){
-            var values = snapshot.val();
+        firebase.database().ref(`Rooms/${this.state.billID}/users`).on('value', function(userInfo){
+          if(userInfo.val() != null){
+            var values = userInfo.val();
             var currentUser = dis.state.userID;
             var no_users = 0;
             var no_finished_users = 0;
@@ -147,53 +139,56 @@ export default class OCRResult extends Component<Props>{
               var finalTotal = Math.round((chosenItemsTotal + calculatedTax) * 100) / 100;
 
               dis.setState({
-                userBillPrice: values[currentUser].itemsChosenTotal,
+                userBillPrice: values[currentUser].itemsChosenTotal.toFixed(2),
                 userFinalBillPrice: finalTotal
               });
             }
 
             Object.keys(values).forEach(user =>{
+              
               no_users += 1;
 
               if(values[user].finishedChoosing){
                 no_finished_users += 1;
               }
+              else{
+                remaining_users.push(user)
+              }
             });
+
+            dis.state.remainingUsers = remaining_users;
 
             if(no_users == no_finished_users && dis.state.hostPaypalInit){
               dis.setState({reviewModalVisible: false});
               dis.props.navigation.navigate("Payment", {finalTotal: dis.state.userFinalBillPrice, hostAccount: dis.state.hostPaypal});
             }
           }
-        });
-    }
+        }); //
+    } // To Do
     
     _calculateRemainingBillPrice(items){
       if(items != null){
         var totalRemainingValue = 0;
 
         for(var itemIndex=0; itemIndex < items.length; itemIndex++){
-          var itemPrice = items[itemIndex].data.price;
+          var itemPrice = parseFloat(items[itemIndex].data.price.replace(/[^\d.-]/g, ''));
           
-          totalRemainingValue = totalRemainingValue + parseFloat(itemPrice.replace(/[^\d.-]/g, ''));
-          //console.log("Item: " + items[itemIndex].item + " Price: " + itemPrice + " Remaining Value: " + totalRemainingValue)
+          totalRemainingValue = totalRemainingValue + itemPrice
         }
   
         this.DB._setRemainingTotal(this.state.billID, totalRemainingValue);
 
-        if(!this.state.remainingValue_TotalValueEqual){
+        if(!this.state.RTP_equal_TP){
           this.DB._setCaclulateTotalPrice(this.state.billID, totalRemainingValue);
         }
         else{
           this.setState({setCTP: true})
         }
       }
-    }
+    } //
 
     _calculateUserBillPrice(items){
-      var previousUserBillPrice = this.state.userBillPrice;
       var newUserBillPrice = 0;
-      var rejectItem = false;
       
       for(var itemIndex=0; itemIndex < items.length; itemIndex++){
         var chosenByInfo = items[itemIndex].data.chosenBy;
@@ -207,30 +202,45 @@ export default class OCRResult extends Component<Props>{
 
       this.DB._updateUserBillData(this.state.billID, this.state.userID, "itemsChosenTotal", parseFloat(newUserBillPrice.toFixed(2)));
       this.DB._updateRemainingTotal(this.state.billID, items)
-    }
+    } //
 
     _chooseItem(itemIndex){
       if(itemIndex != null){
-        this.DB._UserChooseItem(this.state.billID, itemIndex, this.state.userID);
+        this.DB._userChooseItem(this.state.billID, itemIndex, this.state.userID);
       }
-    }
+    } //
 
-    _renderChosenByInfo(chosen){
+    _renderChosenByInfo(chosenBy){
       var renderString = "";
 
-      for(var chosenIndex=0; chosenIndex < chosen.length; chosenIndex++){
-        renderString = renderString + ", " + this.DB._getSpecificUserDisplayName(chosen[chosenIndex]);
+      for(var chosenIndex=0; chosenIndex < chosenBy.length; chosenIndex++){
+        renderString = renderString + ", " + this.DB._getSpecificUserDisplayName(chosenBy[chosenIndex]);
+      }
+      
+      return renderString.substring(2);
+    } // 
+
+    _renderWaitingForUsers(){
+      var remaining_users = this.state.remainingUsers;
+      var renderString = "";
+
+      for(var usersIndex = 0; usersIndex < remaining_users.length; usersIndex++){
+        renderString = renderString + ", " + this.DB._getSpecificUserDisplayName(remaining_users[usersIndex]);
       }
 
       return renderString.substring(2);
-    }
+
+    } //
 
     _renderHostOrJoinOptions(item, index){
       if(this.state.isHost){
         return(
           <View>
             <TouchableOpacity  onPress={() => {this._chooseItem(index)}}><Text style={styles.itemDataStyle}>Choose</Text></TouchableOpacity>
-            <TouchableOpacity  onPress={() => {console.log("Modal Visible"), this.setState({ editModalVisible: true, modalItemName: item.item, modalItemPrice: item.data.price, modalItemIndex: index })}}><Text style={styles.itemDataStyle}>Edit</Text></TouchableOpacity>
+            <TouchableOpacity  onPress={() => {console.log("Modal Visible"), this.setState({ editModalVisible: true, modalItemName: item.item, 
+              modalItemPrice: item.data.price, modalItemIndex: index })}}>
+                <Text style={styles.itemDataStyle}>Edit</Text>
+            </TouchableOpacity>
           </View>
         );
       }
@@ -241,31 +251,29 @@ export default class OCRResult extends Component<Props>{
           </View>
         );
       }
-    }
+    } //
 
     _renderItemList(){
       return(
         <ScrollView>
-
-        <FlatList data={this.state.data}
-          renderItem={({item, index}) => (
-              <View style={styles.headerStyle}>
-                <View>
-                  <Text style={styles.warningStyle}>{item.item}</Text>
-                  <Text style={styles.itemDataStyle}>{item.data.price}</Text>
-                  <Text style={styles.itemDataStyle}>{this._renderChosenByInfo(item.data.chosenBy)}</Text>                     
+          <FlatList data={this.state.data}
+            renderItem={({item, index}) => (
+                <View style={styles.headerStyle}>
+                  <View>
+                    <Text style={styles.warningStyle}>{item.item}</Text>
+                    <Text style={styles.itemDataStyle}>{item.data.price}</Text>
+                    <Text style={styles.itemDataStyle}>{this._renderChosenByInfo(item.data.chosenBy)}</Text>                     
+                  </View>
+                  {this._renderHostOrJoinOptions(item, index)}
                 </View>
-                {this._renderHostOrJoinOptions(item, index)}
-              </View>
-            )
-          }
-        />
-
+              )
+            }
+          />
         </ScrollView>
       );
-    }
+    } //
 
-    _renderModal(){
+    _renderItemEditModal(){
       var editNameVal = this.state.editItemName;
       var editPriceVal = this.state.editItemPrice;
       var setTotalPrice = this.state.setTotalPrice;
@@ -279,9 +287,9 @@ export default class OCRResult extends Component<Props>{
         return(
               <View style={styles.modalStyle}>
                 <View>
-                <Text style={styles.itemDataStyle}>{itemName}</Text>
-                <Text style={styles.itemDataStyle}>{itemPrice}</Text>
-                <TouchableOpacity onPress={() => {console.log("Modal Exit"), this.setState({newItemName: "", newItemPrice: "", editModalVisible: false})}}><Text>Exit</Text></TouchableOpacity>
+                  <Text style={styles.itemDataStyle}>{itemName}</Text>
+                  <Text style={styles.itemDataStyle}>{itemPrice}</Text>
+                  <TouchableOpacity onPress={() => {console.log("Modal Exit"), this.setState({newItemName: "", newItemPrice: "", editModalVisible: false})}}><Text>Exit</Text></TouchableOpacity>
                 </View>
                 <View style={{marginRight: 15}}>
                   <TouchableOpacity  onPress={() => {console.log("Change Item Name"), this.setState({editItemName: true})}}><Text style={styles.itemDataStyle}>Edit</Text></TouchableOpacity>
@@ -293,57 +301,48 @@ export default class OCRResult extends Component<Props>{
       else if(editNameVal && !editPriceVal){
         return(
               <View style={styles.modalStyle}>
-                
                 <View>
                   <Text style={styles.itemDataStyle}>{itemName}</Text>
-                  
                   <TextInput style={styles.textInputBox} value={newItemName}
-                   onChangeText={(newItemName) => this.setState({newItemName: newItemName})}/>
-                  
+                    onChangeText={(newItemName) => this.setState({newItemName: newItemName})}/>
                   <TouchableOpacity  onPress={() => {console.log("Cancel Item Name Update"), this.setState({editItemName: false})}}>
                     <Text style={{fontSize: 20, justifyContent: "space-between", color: 'rgb(255, 0, 0)'}}>Cancel</Text>
                   </TouchableOpacity>
-                  
-                  <TouchableOpacity  onPress={() => {console.log("Accept Item Name Update: " + this.state.newItemName), 
-                  this.state.newItemName.length > 1 ? (this.DB._updateItemInfo(this.state.billID, itemIndex, "item", this.state.newItemName), this.setState({modalItemName: this.state.newItemName, editItemName: false})) : alert("Not Long Enough")}}>
+                  <TouchableOpacity  onPress={() => {this.state.newItemName.length > 1 ? ( this.DB._updateItemInfo(this.state.billID, itemIndex, "item", this.state.newItemName), 
+                    this.setState({modalItemName: this.state.newItemName, editItemName: false}), console.log("Accept Item Name Update: " + this.state.newItemName) ) : alert("Not Long Enough")}}>
                     <Text style={{fontSize: 20, justifyContent: "space-between", color: 'rgb(0, 0, 255)'}}>Accept</Text>
                   </TouchableOpacity>
-                  
                   <Text style={styles.itemDataStyle}>{itemPrice}</Text>
-
                 </View>
                 <View style={{marginRight: 15}}>
                   <TouchableOpacity  onPress={() => {console.log("Change Item Name")}}><Text style={styles.itemDataStyle}>Edit</Text></TouchableOpacity>
                 </View>
-              </View>);
+              </View>
+            );
       }    
       else if(!editNameVal && editPriceVal){
         return(
               <View style={styles.modalStyle}>
                 <View>
                   <Text style={styles.itemDataStyle}>{itemName}</Text>
-
                   <Text style={styles.itemDataStyle}>{itemPrice}</Text>
-
                   <TextInput style={styles.textInputBox} value={newItemPrice}
-                  onChangeText={(newItemPrice) => this.setState({newItemPrice: newItemPrice})}/>
-                  
+                    onChangeText={(newItemPrice) => this.setState({newItemPrice: newItemPrice})}/>                 
                   <TouchableOpacity  onPress={() => {console.log("Cancel Item Price Update"), this.setState({editItemPrice: false})}}>
                     <Text style={{fontSize: 20, justifyContent: "space-between", color: 'rgb(255, 0, 0)'}}>Cancel</Text>
-                  </TouchableOpacity>
-                  
-                  <TouchableOpacity  onPress={() => {console.log("Accept Item Price Update"), 
-                    this.state.newItemPrice.length > 1 ? (this.DB._updateItemInfo(this.state.billID, itemIndex, "price", this.state.newItemPrice), this.setState({modalItemPrice: this.state.newItemPrice, editItemPrice: false})) : alert("Not Long Enough")}}>
+                  </TouchableOpacity>                 
+                  <TouchableOpacity  onPress={() => {this.state.newItemPrice.length > 1 ? ( this.DB._updateItemInfo(this.state.billID, itemIndex, "price", this.state.newItemPrice), 
+                    this.setState({modalItemPrice: this.state.newItemPrice, editItemPrice: false}), console.log("Accept Item Price Update") ) : alert("Not Long Enough")}}>
                     <Text style={{fontSize: 20, justifyContent: "space-between", color: 'rgb(0, 0, 255)'}}>Accept</Text>
-                  </TouchableOpacity>
-                                  
+                  </TouchableOpacity>                                  
                 </View>
                 <View style={{marginRight: 15}}>
                   <TouchableOpacity  onPress={() => {console.log("Change Item Name")}}><Text style={styles.itemDataStyle}>Edit</Text></TouchableOpacity>
                 </View>
-              </View>);
+              </View>
+            );
       }
-    }
+    } //
 
     _renderReviewModal(){
       var billID = this.state.billID;
@@ -353,20 +352,27 @@ export default class OCRResult extends Component<Props>{
         <View style={styles.modalStyle}>
           <View>
             <Text style={styles.footerStyle}>Your Total: {this.state.userBillPrice}</Text>
-            <TouchableOpacity onPress={() => {this.DB._updateUserBillData(billID, userID, "finishedChoosing", true)}}><Text style={styles.footerTextStyle}>Accept</Text></TouchableOpacity>
-            <TouchableOpacity onPress={() => {this.DB._updateUserBillData(billID, userID, "finishedChoosing", false), this.setState({reviewModalVisible: false})}}><Text style={styles.footerTextStyle}>Exit</Text></TouchableOpacity>
+            <Text>Waiting For: {this._renderWaitingForUsers()}</Text>
+            <TouchableOpacity onPress={() => {this.DB._updateUserBillData(billID, userID, "finishedChoosing", true)}}>
+              <Text style={styles.footerTextStyle}>Accept</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => {this.DB._updateUserBillData(billID, userID, "finishedChoosing", false), this.setState({reviewModalVisible: false})}}>
+              <Text style={styles.footerTextStyle}>Exit</Text>
+            </TouchableOpacity>
           </View>
         </View>
       );
     }
 
     _renderFooter(){
-      if(this.state.remainingValue_TotalValueEqual){
+      if(this.state.RTP_equal_TP){
         if(this.state.remainingTotalBillPrice == 0){
           return(
             <View style={styles.footerStyle}>
                 <Text style={styles.footerTextStyle}>Your Total: {this.state.userBillPrice}</Text>
-                <TouchableOpacity onPress={() => {this.setState({reviewModalVisible: true})}}><Text style={styles.footerTextStyle}>Finished</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => {this.setState({reviewModalVisible: true})}}>
+                  <Text style={styles.footerTextStyle}>Finished</Text>
+                </TouchableOpacity>
             </View>); 
         }
         else{
@@ -389,29 +395,33 @@ export default class OCRResult extends Component<Props>{
               <Text style={styles.footerTextStyle}>Remaining: {this.state.calculatedTotalPrice}</Text>
           </View>);
       }
-    }
+    } // Fix Alert
 
     render(){
       const priceCheck = /(?:\d+)?\.\d+/;
 
       return(
-        !this.state.setTotalPrice ?
+        !this.state.setTotalPrice 
+        ?
           <View style={styles.enterPriceStyle}>
             <Text>Enter Bill Total</Text>
             <TextInput style={styles.textInputBox}  value={this.state.totalPrice == 0.00 ? "" : this.state.totalPrice.toString()} onChangeText={(billTotal) => this.setState({totalPrice: billTotal})}/>
-            <TouchableOpacity  onPress={() => priceCheck.exec(this.state.totalPrice) ? (this._chooseItem(this.setState({setTotalPrice: true})), this.DB._setTotalPrice(this.state.billID, parseFloat(this.state.totalPrice.trim()) )) : console.log("NOPE")}> 
+            <TouchableOpacity  onPress={() => priceCheck.exec(this.state.totalPrice) ? ( this.setState({setTotalPrice: true, err_message: ""}), this.DB._setTotalPrice(this.state.billID, parseFloat(this.state.totalPrice.trim())) ) : this.setState({err_message: "Invalid Price"})}> 
+                <Text style={{color: "red"}}>{this.state.err_message}</Text>
                 <Text style={{fontSize:20}}>Join</Text>
             </TouchableOpacity>
           </View>
         
         :
         
-        (!this.state.dataLoaded ?
+        (
+          !this.state.dataLoaded 
+          ?
           <View>
             <Text>Loading Results..</Text>
           </View>
           
-        :
+          :
           
           <View style={{flex: 1}}>
             {this._renderItemList()}
@@ -419,13 +429,12 @@ export default class OCRResult extends Component<Props>{
             {this._renderFooter()}
           
             <Modal transparent={false} visible={this.state.editModalVisible} animationType="slide" onRequestClose={() => console.log("Modal Closed")}>
-              {this._renderModal()}
+              {this._renderItemEditModal()}
             </Modal>
 
             <Modal transparent={false} visible={this.state.reviewModalVisible} animationType="slide" onRequestClose={() => console.log("Modal Closed")}>
               {this._renderReviewModal()}
             </Modal>
-
           </View>    
         )
       )
@@ -479,6 +488,6 @@ const styles = StyleSheet.create({
       marginTop: 200,
       alignItems: "center"
     }
-  });
+});
 
 AppRegistry.registerComponent('Results', () => OCRResult);

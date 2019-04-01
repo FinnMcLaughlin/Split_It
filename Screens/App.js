@@ -1,15 +1,14 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
-import {createStackNavigator,} from 'react-navigation';
+import React, { Component } from 'react';
+import { Platform, StyleSheet } from 'react-native';
+import { createStackNavigator,} from 'react-navigation';
 import Home from './Home';
 import Camera from './Camera';
 import OCRResult from './OCRResult';
 import Database from './Database';
 import Login from './Login';
 import Register from './Register';
-import Loading from './Loading';
-import Display from './Display';
 import Payment from './Payment';
+import _Error from './_Error';
 import { NativeScreen } from 'react-native-screens';
 
 console.disableYellowBox = true;
@@ -20,8 +19,8 @@ const navigate = createStackNavigator({
   Register: { screen : Register }, 
   Camera: { screen: Camera },
   Results: { screen: OCRResult},
-  Display: { screen: Display },
-  Database: {screen: Database},
-  Payment: { screen: Payment }
+  Payment: { screen: Payment },
+  Database: { screen: Database },
+  _Error: { screen: _Error }
 });
 export default navigate;
