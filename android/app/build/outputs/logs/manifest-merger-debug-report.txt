@@ -12,8 +12,6 @@ INJECTED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\an
 MERGED from [com.android.support:multidex:1.0.2] C:\Users\user\.gradle\caches\transforms-1\files-1.1\multidex-1.0.2.aar\5240f3451d6dc9804592b6159b1354fa\AndroidManifest.xml:17:1-22:12
 MERGED from [:react-native-camera] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\react-native-camera\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:2:1-18:12
 MERGED from [:rn-fetch-blob] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\rn-fetch-blob\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:2:1-47:12
-MERGED from [:react-native-tesseract-ocr] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\react-native-tesseract-ocr\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:2:1-13:12
-MERGED from [:react-native-text-detector] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\react-native-text-detector\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:2:1-15:12
 MERGED from [com.facebook.react:react-native:0.57.4] C:\Users\user\.gradle\caches\transforms-1\files-1.1\react-native-0.57.4.aar\57ed19d2358b3919960a0c5a131e3350\AndroidManifest.xml:2:1-15:12
 MERGED from [com.android.support:exifinterface:28.0.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\exifinterface-28.0.0.aar\25cfeb7ee08cc2665af1067f7c5ab961\AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:design:27.1.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\design-27.1.0.aar\5e825ca11edaf3d34b7d5c7e945c0379\AndroidManifest.xml:17:1-22:12
@@ -59,7 +57,6 @@ MERGED from [com.facebook.fresco:imagepipeline:1.10.0] C:\Users\user\.gradle\cac
 MERGED from [com.facebook.fresco:imagepipeline-base:1.10.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\imagepipeline-base-1.10.0.aar\91028dbe919bb8866043cd0fb9ded64d\AndroidManifest.xml:2:1-9:12
 MERGED from [com.facebook.soloader:soloader:0.5.1] C:\Users\user\.gradle\caches\transforms-1\files-1.1\soloader-0.5.1.aar\64f122f1013cb2bad4635685ad3f98fe\AndroidManifest.xml:2:1-13:12
 MERGED from [org.webkit:android-jsc:r174650] C:\Users\user\.gradle\caches\transforms-1\files-1.1\android-jsc-r174650.aar\50d1ec020098c0388af0542655a26b23\AndroidManifest.xml:1:1-3:12
-MERGED from [com.rmtheis:tess-two:7.0.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\tess-two-7.0.0.aar\b02ba9c912fb9388aa2e903cbddf9e19\AndroidManifest.xml:17:1-26:12
 MERGED from [com.braintreepayments.api:google-payment:1.0.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\google-payment-1.0.0.aar\7664e497b8af37f181b9df02f071b1a6\AndroidManifest.xml:2:1-11:12
 MERGED from [com.braintreepayments.api:visa-checkout:1.0.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\visa-checkout-1.0.0.aar\86a8595253864cbee9509dd54a299a80\AndroidManifest.xml:2:1-12:12
 MERGED from [com.paypal.android.sdk:paypal-one-touch:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\paypal-one-touch-2.22.0.aar\c6b100afbb07bf5af3272315efb8e974\AndroidManifest.xml:2:1-13:12
@@ -239,10 +236,6 @@ MERGED from [:react-native-camera] C:\Users\user\Documents\DIT Data Backup\Final
 MERGED from [:react-native-camera] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\react-native-camera\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:rn-fetch-blob] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\rn-fetch-blob\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:7:5-9:41
 MERGED from [:rn-fetch-blob] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\rn-fetch-blob\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:7:5-9:41
-MERGED from [:react-native-tesseract-ocr] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\react-native-tesseract-ocr\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:7:5-9:41
-MERGED from [:react-native-tesseract-ocr] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\react-native-tesseract-ocr\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:7:5-9:41
-MERGED from [:react-native-text-detector] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\react-native-text-detector\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:7:5-9:41
-MERGED from [:react-native-text-detector] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\react-native-text-detector\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:7:5-9:41
 MERGED from [com.facebook.react:react-native:0.57.4] C:\Users\user\.gradle\caches\transforms-1\files-1.1\react-native-0.57.4.aar\57ed19d2358b3919960a0c5a131e3350\AndroidManifest.xml:7:5-9:41
 MERGED from [com.facebook.react:react-native:0.57.4] C:\Users\user\.gradle\caches\transforms-1\files-1.1\react-native-0.57.4.aar\57ed19d2358b3919960a0c5a131e3350\AndroidManifest.xml:7:5-9:41
 MERGED from [com.android.support:exifinterface:28.0.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\exifinterface-28.0.0.aar\25cfeb7ee08cc2665af1067f7c5ab961\AndroidManifest.xml:20:5-44
@@ -331,8 +324,6 @@ MERGED from [com.facebook.fresco:imagepipeline-base:1.10.0] C:\Users\user\.gradl
 MERGED from [com.facebook.fresco:imagepipeline-base:1.10.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\imagepipeline-base-1.10.0.aar\91028dbe919bb8866043cd0fb9ded64d\AndroidManifest.xml:5:5-7:41
 MERGED from [com.facebook.soloader:soloader:0.5.1] C:\Users\user\.gradle\caches\transforms-1\files-1.1\soloader-0.5.1.aar\64f122f1013cb2bad4635685ad3f98fe\AndroidManifest.xml:7:5-9:41
 MERGED from [com.facebook.soloader:soloader:0.5.1] C:\Users\user\.gradle\caches\transforms-1\files-1.1\soloader-0.5.1.aar\64f122f1013cb2bad4635685ad3f98fe\AndroidManifest.xml:7:5-9:41
-MERGED from [com.rmtheis:tess-two:7.0.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\tess-two-7.0.0.aar\b02ba9c912fb9388aa2e903cbddf9e19\AndroidManifest.xml:22:5-24:41
-MERGED from [com.rmtheis:tess-two:7.0.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\tess-two-7.0.0.aar\b02ba9c912fb9388aa2e903cbddf9e19\AndroidManifest.xml:22:5-24:41
 MERGED from [com.braintreepayments.api:google-payment:1.0.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\google-payment-1.0.0.aar\7664e497b8af37f181b9df02f071b1a6\AndroidManifest.xml:7:5-9:41
 MERGED from [com.braintreepayments.api:google-payment:1.0.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\google-payment-1.0.0.aar\7664e497b8af37f181b9df02f071b1a6\AndroidManifest.xml:7:5-9:41
 MERGED from [com.braintreepayments.api:visa-checkout:1.0.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\visa-checkout-1.0.0.aar\86a8595253864cbee9509dd54a299a80\AndroidManifest.xml:8:5-10:41
@@ -415,8 +406,6 @@ ADDED from [:rn-fetch-blob] C:\Users\user\Documents\DIT Data Backup\Final Year\F
 		ADDED from [:rn-fetch-blob] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\rn-fetch-blob\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:30:22-73
 uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
 ADDED from [:rn-fetch-blob] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\rn-fetch-blob\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:33:5-81
-MERGED from [:react-native-tesseract-ocr] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\react-native-tesseract-ocr\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:11:5-81
-MERGED from [:react-native-tesseract-ocr] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\react-native-tesseract-ocr\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:11:5-81
 	android:name
 		ADDED from [:rn-fetch-blob] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\rn-fetch-blob\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:33:22-78
 provider#android.support.v4.content.FileProvider
@@ -435,14 +424,6 @@ ADDED from [:rn-fetch-blob] C:\Users\user\Documents\DIT Data Backup\Final Year\F
 		ADDED from [:rn-fetch-blob] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\rn-fetch-blob\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:43:17-55
 	android:name
 		ADDED from [:rn-fetch-blob] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\rn-fetch-blob\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:42:17-67
-uses-permission#android.permission.READ_EXTERNAL_STORAGE
-IMPLIED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-39:12 reason: com.reactlibrary requested WRITE_EXTERNAL_STORAGE
-meta-data#com.google.firebase.ml.vision.DEPENDENCIES
-ADDED from [:react-native-text-detector] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\react-native-text-detector\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:11:5-13:31
-	android:value
-		ADDED from [:react-native-text-detector] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\react-native-text-detector\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:13:9-28
-	android:name
-		ADDED from [:react-native-text-detector] C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\node_modules\react-native-text-detector\android\build\intermediates\manifests\full\debug\AndroidManifest.xml:12:9-66
 service#com.google.firebase.components.ComponentDiscoveryService
 ADDED from [com.google.firebase:firebase-measurement-connector-impl:17.0.2] C:\Users\user\.gradle\caches\transforms-1\files-1.1\firebase-measurement-connector-impl-17.0.2.aar\b4c4568bd03fac2335e101fc12a5ee4c\AndroidManifest.xml:27:9-31:19
 MERGED from [com.google.firebase:firebase-iid:17.0.3] C:\Users\user\.gradle\caches\transforms-1\files-1.1\firebase-iid-17.0.3.aar\882b3aed98ffdd9ca9dedf0ea1f4cce0\AndroidManifest.xml:29:9-35:19
@@ -591,3 +572,5 @@ ADDED from [com.braintreepayments.api:braintree:2.22.0] C:\Users\user\.gradle\ca
 		ADDED from [com.braintreepayments.api:braintree:2.22.0] C:\Users\user\.gradle\caches\transforms-1\files-1.1\braintree-2.22.0.aar\4efd1b40c220aa1c4de96395fa0ead98\AndroidManifest.xml:23:18-90
 uses-permission#android.permission.READ_PHONE_STATE
 IMPLIED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-39:12 reason: org.webkit.android_jsc has a targetSdkVersion < 4
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+IMPLIED from C:\Users\user\Documents\DIT Data Backup\Final Year\FYP\split_it\android\app\src\main\AndroidManifest.xml:1:1-39:12 reason: org.webkit.android_jsc requested WRITE_EXTERNAL_STORAGE

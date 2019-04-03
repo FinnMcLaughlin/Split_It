@@ -31,15 +31,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Required to check whether Wi-Fi is enabled -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Required to read and write the expansion files on shared storage -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-    <meta-data
-        android:name="com.google.firebase.ml.vision.DEPENDENCIES"
-        android:value="ocr" />
-
     <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" /> <!-- Required by older versions of Google Play services to create IID tokens -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name="com.split_it.MainApplication"

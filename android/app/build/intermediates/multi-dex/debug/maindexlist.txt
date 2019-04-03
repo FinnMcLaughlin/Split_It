@@ -221,7 +221,6 @@ com/facebook/react/uimanager/common/UIManagerType.class
 com/facebook/soloader/DoNotOptimize.class
 com/facebook/soloader/SoLoader.class
 com/facebook/widget/text/span/BetterImageSpan$BetterImageSpanAlignment.class
-com/fetchsky/RNTextDetector/RNTextDetectorPackage.class
 com/google/android/cameraview/CameraView$Facing.class
 com/google/android/cameraview/CameraView$Flash.class
 com/google/android/gms/auth/api/accounttransfer/AuthenticatorTransferCompletionStatus.class
@@ -280,7 +279,6 @@ com/google/firebase/ml/vision/face/FirebaseVisionFaceDetectorOptions$ModeType.cl
 com/google/firebase/ml/vision/face/FirebaseVisionFaceLandmark$FaceLandmark.class
 com/google/firebase/ml/vision/text/FirebaseVisionCloudTextRecognizerOptions$CloudTextModelType.class
 com/google/firebase/ml/vision/text/FirebaseVisionTextRecognizer$RecognizerType.class
-com/reactlibrary/RNTesseractOcrPackage.class
 com/split_it/BuildConfig.class
 com/split_it/MainApplication$1.class
 com/split_it/MainApplication.class

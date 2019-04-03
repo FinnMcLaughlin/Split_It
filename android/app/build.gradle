@@ -149,15 +149,9 @@ dependencies {
 	implementation "com.android.support:support-v4:+"
     implementation "com.android.support:appcompat-v7:27+"
 	implementation "com.android.support:design:27.1.0"
-	
-	implementation project(':react-native-tesseract-ocr')
-	
+		
 	implementation 'com.google.firebase:firebase-core:16.0.4'
     implementation 'com.google.firebase:firebase-ml-vision:17.0.0'
-
-    implementation (project(':react-native-text-detector')) {
-        exclude group: 'com.google.firebase'
-    }
 	
 	implementation 'com.braintreepayments.api:braintree:2.+'
 	
@@ -177,6 +171,3 @@ configurations.all {
         force 'com.android.support:support-v4:27.1.0'
     }
 }
-
-// Work around for onesignal-gradle-plugin compatibility
-// com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true

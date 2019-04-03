@@ -41,7 +41,6 @@ export default class Home extends Component<Props>{
             userAuthenticated: false,
             userDisplayName: "",
             joiningBill: false,
-            joinBillID: "",
             joinBillID_Error: "",
             billIDcheck: false
         }
@@ -59,7 +58,7 @@ export default class Home extends Component<Props>{
                     });
                 }
                 else{
-                    this.props.navigation.navigate("Results", billID);
+                    this.props.navigation.navigate("Results", {ID: billID});
                 }    
             });
 
@@ -73,7 +72,7 @@ export default class Home extends Component<Props>{
     //--2
     componentDidMount(){
         firebase.auth().onAuthStateChanged(user => {(user ? this.setState({ userAuthenticated: true, userDisplayName: this.DB._getCurrentUserDisplayName()}) : this.props.navigation.navigate("Login"))});
-        //firebase.auth().onAuthStateChanged(user => {this.props.navigation.navigate(user ? "Results" : "Login")});
+        ///firebase.auth().onAuthStateChanged(user => {this.props.navigation.navigate(user ? "Results" : "Login")});
     }
   
     //--3

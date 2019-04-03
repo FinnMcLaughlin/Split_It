@@ -6091,16 +6091,6 @@ react-native-tab-view@^1.0.0:
   dependencies:
     prop-types "^15.6.1"
 
-react-native-tesseract-ocr@^1.0.10:
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/react-native-tesseract-ocr/-/react-native-tesseract-ocr-1.0.10.tgz#f11170bd7d1708495687c842b934eb3e412a0fe6"
-  integrity sha512-EaNaWE+cQNQFAv9deovib538aB4Fi2gmjiNN8A47BEDj74NNN+r98J5cQhIZESjy1xtxevpg0OW2naFcEkf7qw==
-
-react-native-text-detector@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/react-native-text-detector/-/react-native-text-detector-0.0.6.tgz#c33cdcfd574b15cb94ffe4db320e7a22ead12c86"
-  integrity sha512-Etwflm4EU1rOvMiQ8iStaGZkl6qbYyIcApJRWvvpHvkc+NTJ2btM3FAayF829E6FLFWOwjZCBzaRns1LTrQcFw==
-
 react-native@0.57.4:
   version "0.57.4"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.57.4.tgz#cb7ba78e8be420737868fa9a97caa897a534c893"

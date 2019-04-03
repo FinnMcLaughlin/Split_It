@@ -17,8 +17,6 @@
     "react": "16.6.0-alpha.8af6728",
     "react-native": "0.57.4",
     "react-native-camera": "^1.4.1",
-    "react-native-tesseract-ocr": "^1.0.10",
-    "react-native-text-detector": "^0.0.6",
     "react-navigation": "^2.18.2",
     "react-router-native": "^4.3.0",
     "rn-fetch-blob": "^0.10.13"

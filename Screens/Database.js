@@ -6,6 +6,7 @@ import firebase from '@firebase/app';
 import '@firebase/auth';
 
 
+
 if (!firebase.apps.length) {
     firebase.initializeApp(config);
 }
@@ -72,14 +73,14 @@ export default class Database extends Component<Props>{
             billID=billID+ billID_chars.charAt(randIndex);
             console.log("Room ID: " + billID);
         }
-        while(ID.length < ID_Length);
+        while(billID.length < ID_Length);
 
         this._findBillID(billID).then((result) => {
             if(result.val() == null){
                 console.log(billID + " Is Unique");
                 this._createNewRoom(billID, data).then(() => {
                     console.log("Room Created");
-                    navigate.navigate("Results");
+                    navigate.navigate("Results", {ID: billID});
                 })
                 .catch(() => {
                     var err_message = "Error Creating New Bill"
@@ -99,8 +100,14 @@ export default class Database extends Component<Props>{
             content: data
         }).then(() => {
                 firebase.database().ref(`Rooms/${billID}/host`).set({
-                hostID: firebase.auth().currentUser.uid
+                hostID: firebase.auth().currentUser.uid                    
             })
+        }).then(() => {
+            firebase.database().ref(`Rooms/${billID}/priceValues`).set({
+                billTotal: "",
+                calculatedTotal: "",
+                remainingTotal: ""
+            })                   
         }).catch(() => {
             var err_message = "Error Storing Information into Database"
             console.log(err_message);

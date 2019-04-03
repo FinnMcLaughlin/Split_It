@@ -1,7 +1,7 @@
 'use strict'
 
 import React, {Component} from 'react';
-import {AppRegistry, Platform, StyleSheet, Text, View, ScrollView, Button, FlatList, TouchableOpacity, Modal, TextInput} from 'react-native';
+import {AppRegistry, Platform, StyleSheet, ImageEditor, Text, View, ScrollView, Button, FlatList, TouchableOpacity, Modal, TextInput} from 'react-native';
 import firebase from '@firebase/app';
 import Database from './Database';
 
@@ -19,7 +19,7 @@ export default class OCRResult extends Component<Props>{
         this.DB = new Database();
 
         this.state = {
-            billID: "J3LW",//this.props.navigation.state.params,
+            billID: this.props.navigation.state.params.ID,
             userID: firebase.auth().currentUser.uid,
             err_message: "",
             
@@ -32,6 +32,7 @@ export default class OCRResult extends Component<Props>{
             dataLoaded: false,
 
             editModalVisible: false,
+            editModalClosing: true,
             modalItemName: "",
             modalItemPrice: "",
             modalItemIndex: 0,
@@ -58,24 +59,30 @@ export default class OCRResult extends Component<Props>{
 
         let dis = this;
 
-        firebase.database().ref(`Rooms/${this.state.billID}/host`).once('value', function(hostInfo){
-          var hostInfo = hostInfo.val();
+        
+        firebase.database().ref(`Rooms/${this.state.billID}/host`).on('value', function(hostInfo){
+          if(hostInfo.val() != null){
+            var hostInfo = hostInfo.val();
 
-          if(hostInfo.hostID == dis.state.userID){
-            dis.state.isHost = true;
-          }
+            if(hostInfo.hostID == dis.state.userID){
+              dis.state.isHost = true;
+            }
 
-          dis.DB._initUserBillData(dis.state.billID, dis.state.userID); 
-  
-          if(dis.state.isHost){
-            dis.DB._getHostPaypalAccount(dis.state.billID, dis.state.userID);
-          }
-          else{
-            if(hostInfo.hostPayPalEmail != null){
-              dis.state.hostPaypal = hostInfo.hostPayPalEmail;
+            dis.DB._initUserBillData(dis.state.billID, dis.state.userID); 
+    
+            if(dis.state.isHost){
+              dis.DB._getHostPaypalAccount(dis.state.billID, dis.state.userID);
+              dis.state.hostPaypalInit = true;
+            }
+            else{
+              if(hostInfo.hostPayPalEmail != null){
+                dis.state.hostPaypal = hostInfo.hostPayPalEmail;
+                dis.state.hostPaypalInit = true;
+              }
             }
           }
-        }); //Add Error Check
+        });
+           
         
         firebase.database().ref(`Rooms/${this.state.billID}/content`).on('value', function(itemInfo){  
           var itemInfo = itemInfo.val();
@@ -95,33 +102,33 @@ export default class OCRResult extends Component<Props>{
         }); //
 
         firebase.database().ref(`Rooms/${this.state.billID}/priceValues`).on('value', function(priceValues){   
-          var priceValues = priceValues.val();
+          var prices = priceValues.val();
+
+          if(prices.billTotal != ""){
+            console.log("Setting Total Price")
+            dis.setState({totalPrice: prices.billTotal.value, setTotalPrice: true});
           
-          if(priceValues.billTotal != null){
-            dis.setState({totalPrice: priceValues.billTotal.value})
-          }
-
-          if(priceValues.calculatedTotal != null){
-            dis.setState({calculatedTotalPrice: priceValues.calculatedTotal.value})     
-          }
-
-          if(priceValues.remainingBillPrice != null){
-            dis.setState({remainingTotalBillPrice: priceValues.remainingBillPrice.value})
-          }
-
-          if(!dis.state.RTP_equal_TP){
-            if(priceValues.billTotal != null && priceValues.calculatedTotal != null){
-              var equal;
-              
-              if(priceValues.billTotal.value == priceValues.calculatedTotal.value){
-                equal = true;
-              }
-              else{
-                equal = false;
-              }
-            
-              dis.setState({RTP_equal_TP: equal});
+            if(prices.calculatedTotal != ""){
+              console.log("This.SetState.CalculatedPrice")
+              dis.setState({calculatedTotalPrice: prices.calculatedTotal.value})     
             }
+
+            if(prices.remainingBillPrice != ""){
+              dis.setState({remainingTotalBillPrice: prices.remainingBillPrice.value})
+            }
+
+            if(!dis.state.RTP_equal_TP){
+                var equal;
+                
+                if(prices.billTotal.value == prices.calculatedTotal.value){
+                  equal = true;
+                }
+                else{
+                  equal = false;
+                }
+              
+                dis.setState({RTP_equal_TP: equal});
+            }          
           }
         }); //
 
@@ -164,9 +171,11 @@ export default class OCRResult extends Component<Props>{
             }
           }
         }); //
-    } // To Do
+    } //
     
     _calculateRemainingBillPrice(items){
+      console.log(items)
+      
       if(items != null){
         var totalRemainingValue = 0;
 
@@ -175,10 +184,13 @@ export default class OCRResult extends Component<Props>{
           
           totalRemainingValue = totalRemainingValue + itemPrice
         }
+
+        console.log(totalRemainingValue)
   
         this.DB._setRemainingTotal(this.state.billID, totalRemainingValue);
 
         if(!this.state.RTP_equal_TP){
+          console.log("Setting Calculated Total Price")
           this.DB._setCaclulateTotalPrice(this.state.billID, totalRemainingValue);
         }
         else{
@@ -289,7 +301,7 @@ export default class OCRResult extends Component<Props>{
                 <View>
                   <Text style={styles.itemDataStyle}>{itemName}</Text>
                   <Text style={styles.itemDataStyle}>{itemPrice}</Text>
-                  <TouchableOpacity onPress={() => {console.log("Modal Exit"), this.setState({newItemName: "", newItemPrice: "", editModalVisible: false})}}><Text>Exit</Text></TouchableOpacity>
+                  <TouchableOpacity onPress={() => {console.log("Modal Exit"), this.setState({newItemName: "", newItemPrice: "", editModalVisible: false, editModalClosing: true})}}><Text>Exit</Text></TouchableOpacity>
                 </View>
                 <View style={{marginRight: 15}}>
                   <TouchableOpacity  onPress={() => {console.log("Change Item Name"), this.setState({editItemName: true})}}><Text style={styles.itemDataStyle}>Edit</Text></TouchableOpacity>
@@ -384,18 +396,19 @@ export default class OCRResult extends Component<Props>{
         }
       }
       else{
-        if(this.state.setCTP && !this.state.editModalVisible){
+        if(!this.state.setCTP && this.state.editModalClosing){
           alert("Bill Total: " + this.state.totalPrice + " and Calculated Total: " + this.state.calculatedTotalPrice
           + " does not match.\nReview the item list and edit any necessary items to match the bill");
+          this.setState({editModalClosing: false});
         }
 
         return(
           <View style={styles.footerStyle}>
               <Text style={styles.footerTextStyle}>Bill Total: {this.state.totalPrice}</Text>
-              <Text style={styles.footerTextStyle}>Remaining: {this.state.calculatedTotalPrice}</Text>
+              <Text style={styles.footerTextStyle}>Calculated Total: {this.state.calculatedTotalPrice}</Text>
           </View>);
       }
-    } // Fix Alert
+    } //
 
     render(){
       const priceCheck = /(?:\d+)?\.\d+/;
