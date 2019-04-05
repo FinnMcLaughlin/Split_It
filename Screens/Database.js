@@ -106,7 +106,7 @@ export default class Database extends Component<Props>{
             firebase.database().ref(`Rooms/${billID}/priceValues`).set({
                 billTotal: "",
                 calculatedTotal: "",
-                remainingTotal: ""
+                remainingBillPrice: ""
             })                   
         }).catch(() => {
             var err_message = "Error Storing Information into Database"

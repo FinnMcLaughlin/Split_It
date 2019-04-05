@@ -1,7 +1,7 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {AppRegistry, Platform, StyleSheet, Text, View, Button, TextInput} from 'react-native';
+import {AppRegistry, Platform, StyleSheet, Text, View, Button, TextInput, KeyboardAvoidingView, TouchableOpacity} from 'react-native';
 import {createStackNavigation} from 'react-navigation';
 import Database from './Database';
 import firebase from 'firebase';
@@ -21,7 +21,8 @@ export default class Register extends Component{
             password: "Sign in Password",
             name: "Name",
             paypal_email: "PayPal Account Email",
-            err_message: ""
+            err_message: "",
+            avoidKeyboard: false
         };
 
         this.DB = new Database();
@@ -33,67 +34,85 @@ export default class Register extends Component{
 
     render(){
         return(
-            <View>
-                <Text style={styles.headerStyle}>Register User</Text>
-                <View style={styles.inputStyle}>
-                    <TextInput style={styles.textInputStyle} onFocus={() => this.setState({email: ""})}
-                        onChangeText = {(email) => this.setState({email})} value={this.state.email}/>
-                    <TextInput style={styles.textInputStyle} onFocus={() => this.setState({password: ""})}
-                        onChangeText = {(password) => this.setState({password})} value={this.state.password}/>
-                    <TextInput style={styles.textInputStyle} onFocus={() => this.setState({name: ""})}
-                        onChangeText = {(name) => this.setState({name})} value= {this.state.name}/>
-                    <TextInput style={styles.textInputStyle} onFocus={() => this.setState({paypal_email: ""})}
-                        onChangeText = {(paypal_email) => this.setState({paypal_email})} value={this.state.paypal_email}/>
-                    <Text style={{color: "red"}}>{this.state.err_message}</Text>
+            <KeyboardAvoidingView style={styles.view_style} behavior='position' enabled={this.state.avoidKeyboard}>
+           
+                <View style={{marginBottom: 15}}>
+                <Text style={styles.header_style}>Register User</Text>
                 </View>
-                <View style={styles.buttonStyle}>
-                    <Button styles={styles.button_style} title='Go' 
-                        onPress={() => {this.DB._registerUser(this.state.email, this.state.password, this.state.name, this.state.paypal_email, this.props.navigation)}}/>
-                </View>         
-            </View>
+
+                <View style={styles.textInput_style}>
+                    <TextInput style={styles.textInputBox} onFocus={() => this.setState({email: "", avoidKeyboard: false})}
+                        onChangeText = {(email) => this.setState({email})} value={this.state.email}/>
+                </View>
+                
+                <View style={styles.textInput_style}>
+                    <TextInput style={styles.textInputBox} onFocus={() => this.setState({password: "", avoidKeyboard: false})}
+                        onChangeText = {(password) => this.setState({password})} value={this.state.password}/>
+                </View> 
+
+                <View style={styles.textInput_style}>
+                <TextInput style={styles.textInputBox} onFocus={() => this.setState({name: "", avoidKeyboard: true})}
+                            onChangeText = {(name) => this.setState({name})} value= {this.state.name}/>
+                </View> 
+
+                <View style={styles.textInput_style}>
+                <TextInput style={styles.textInputBox} onFocus={() => this.setState({paypal_email: "", avoidKeyboard: true})}
+                            onChangeText = {(paypal_email) => this.setState({paypal_email})} value={this.state.paypal_email}/>
+                </View>     
+
+                <View style={styles.textInput_style}>
+                <Text style={{color: "red"}}>{this.state.err_message}</Text>
+                </View>
+                            
+                    
+                <View style={styles.button_view}>
+                <TouchableOpacity style={styles.button_style}
+                    onPress={() => {this.DB._registerUser(this.state.email, this.state.password, this.state.name, this.state.paypal_email, this.props.navigation)}}>
+                        <Text style={styles.button_style}>Register</Text>
+                </TouchableOpacity>
+                </View>
+                
+            </KeyboardAvoidingView> 
         );
     }
 }
 
+
 const styles = StyleSheet.create({
-    headerStyle: {
-        fontSize: 30,
-        alignItems: "center"
+    header_style: {
+        fontSize: 40,
+        alignItems: "center",
+        fontFamily: 'Rocco',
+        color: 'rgb(251, 113, 5)',
+        marginTop: 100
     },
-    inputStyle: {
-        justifyContent: "space-between",
-        alignItems: "center"
+    view_style: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: 'rgb(58, 102, 185)',
     },
-    textInputStyle: {
+    textInput_style: {
+        marginBottom: 15,
+        alignItems: 'center'
+    },
+    textInputBox: {
         height: 40,
-        width: 200,
-        marginTop: 25,
-        borderWidth: 1,
-        borderColor: 'blue'
+        width: 250,
+        borderWidth: 3,
+        borderColor: 'rgb(221, 193, 54)',
+        paddingLeft: 10,
+        color: 'rgb(251, 113, 5)',
+        fontFamily: 'Rocco',
+        fontSize: 20
     },
-    buttonStyle: {
-        height: 30,
-        marginTop: 20
+    button_view: {
+        alignItems: 'center'
+    },
+    button_style: {
+        fontSize: 25,
+        fontFamily: 'Rocco',
+        color: 'rgb(251, 113, 5)'
     }
-    // view_style:{
-    //     height: 200,
-    //     width: 300,
-    //     marginTop: 80,
-    //     marginLeft: 40
-    // },
-    // textInputBox: {
-    //     height: 40,
-    //     width: 250,
-    //     padding: 10,
-    //     marginTop: 35,
-    //     marginLeft: 15,
-    //     borderWidth: 1,
-    //     borderColor: 'blue',
-    // },
-    // button_style: {
-    //     height: 30,
-    //     marginTop: 35
-    // },
 });
 
 AppRegistry.registerComponent('Register', () => Register);

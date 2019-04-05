@@ -1,9 +1,10 @@
 'use strict';
 
 import React, {Component} from 'react';
-import {AppRegistry, Platform, StyleSheet, Text, View, Button, TextInput} from 'react-native';
+import {AppRegistry, Platform, StyleSheet, Text, View, Button, TouchableOpacity, TextInput, Image, KeyboardAvoidingView} from 'react-native';
 import {createStackNavigation} from 'react-navigation';
 import firebase from 'firebase';
+
 
 type Props = {};
 
@@ -31,43 +32,69 @@ export default class Login extends Component{
 
     render(){
         return(
-            <View style={styles.view_style}>
-                <TextInput style={styles.textInputBox}
-                onChangeText = {(email) => this.setState({email})} value={this.state.email}/>
-                <TextInput style={styles.textInputBox}
-                onChangeText = {(password) => this.setState({password})} value={this.state.password}/>
-                <View style={styles.button_style}>
-                    <Button styles={styles.button_style} title='Login' 
-                    onPress={() => {this._LoginUser("finnmclaughlin2@gmail.com", "Kevisarat")}}/>
+            <KeyboardAvoidingView style={styles.view_style} behavior='position' enabled>
+
+                <View>
+                    <Image style={styles.logo_style} source={require('../Resources/Logo_Orange.png')}/>
                 </View>
-                <View style={styles.button_style}>
-                    <Button styles={styles.button_style} title='Register' 
-                    onPress={() => {this.props.navigation.navigate("Register", {err_message: null})}}/>
+
+                <View style={styles.textInput_style}>
+                    <TextInput style={styles.textInputBox} onFocus={() => this.setState({email: ""})}
+                        onChangeText = {(email) => this.setState({email})} value={this.state.email}/>
                 </View>
-            </View>
+                <View style={styles.textInput_style}>
+                    <TextInput style={styles.textInputBox}  onFocus={() => this.setState({password: ""})}
+                        onChangeText = {(password) => this.setState({password: password})} value={this.state.password}/>
+                </View>                    
+                    
+                <View style={styles.button_view}>
+                    <TouchableOpacity onPress={() => {this._LoginUser(this.state.email, this.state.password)}}>
+                        <Text style={styles.button_style}>Login</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.button_view}>
+                    <TouchableOpacity onPress={() => {this.props.navigation.navigate("Register", {err_message: null})}}>
+                        <Text style={styles.button_style}>Register</Text>
+                    </TouchableOpacity>
+                </View>
+            </KeyboardAvoidingView>
+            
         )
     }
 }
 
 const styles = StyleSheet.create({
-    view_style:{
-        height: 200,
-        width: 300,
-        marginTop: 200,
-        marginLeft: 40
+    view_style: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: 'rgb(80, 120, 192)'
+    },
+    textInput_style: {
+        marginBottom: 15,
+        alignItems: 'center'
     },
     textInputBox: {
         height: 40,
         width: 250,
-        padding: 10,
-        marginTop: 35,
-        marginLeft: 15,
-        borderWidth: 1,
-        borderColor: 'blue',
+        borderWidth: 3,
+        borderColor: 'rgb(221, 193, 54)',
+        paddingLeft: 10,
+        color: 'rgb(251, 113, 5)',
+        fontFamily: 'Rocco',
+        fontSize: 20
+    },
+    button_view: {
+        marginTop: 15,
+        alignItems: 'center'
     },
     button_style: {
-        marginTop: 15
+        fontSize: 25,
+        fontFamily: 'Rocco',
+        color: 'rgb(251, 113, 5)'
     },
+    logo_style: {
+       alignItems: 'center'
+    }
 });
 
 AppRegistry.registerComponent('Login', () => Login);

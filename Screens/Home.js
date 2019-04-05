@@ -22,7 +22,7 @@ either host a new bill or join an existing bill, by pushing the respective butto
 'use strict';
 
 import React, {Component} from 'react';
-import {AppRegistry, Platform, StyleSheet, Text, View, Button, TextInput, TouchableOpacity, Image} from 'react-native';
+import {AppRegistry, Platform, StyleSheet, Text, View, Button, TextInput, TouchableOpacity, Image, ActivityIndicator} from 'react-native';
 import firebase from '@firebase/app';
 import '@firebase/auth';
 import Database from './Database';
@@ -41,6 +41,7 @@ export default class Home extends Component<Props>{
             userAuthenticated: false,
             userDisplayName: "",
             joiningBill: false,
+            joinBillID: "",
             joinBillID_Error: "",
             billIDcheck: false
         }
@@ -72,27 +73,34 @@ export default class Home extends Component<Props>{
     //--2
     componentDidMount(){
         firebase.auth().onAuthStateChanged(user => {(user ? this.setState({ userAuthenticated: true, userDisplayName: this.DB._getCurrentUserDisplayName()}) : this.props.navigation.navigate("Login"))});
-        ///firebase.auth().onAuthStateChanged(user => {this.props.navigation.navigate(user ? "Results" : "Login")});
+        //firebase.auth().onAuthStateChanged(user => {this.props.navigation.navigate(user ? "Login" : "Login")});
     }
   
     //--3
     _renderHomeScreen(){
         if(!this.state.joiningBill){
             return(
-            <View style={styles.searchInput}>
-                <Text>Welcome {this.state.userDisplayName}</Text>
-                <View style={styles.button_view}>
-                    <Image style={styles.logoStyle} source={require('../Resources/Logo.png')}/>
-                    <Button title='Host Bill'
-                        onPress={() => {this.props.navigation.navigate("Camera"), console.log("Preparing to Host Bill")}}/>
+            <View>
+                <View style={styles.home_style}>
+                    <Image style={styles.logoStyle} source={require('../Resources/Logo_Orange.png')}/>
+                    
+                    <TouchableOpacity onPress={() => {this.props.navigation.navigate("Camera"), console.log("Preparing to Host Bill")}}>
+                        <Text style={styles.button_style}>Host Bill</Text>
+                    </TouchableOpacity>
                 </View>
+                
                 <View style={styles.button_view}>
-                    <Button title='Join Bill' 
-                        onPress={() => {this.setState({joiningBill: true}), console.log("Preparing to Join Bill")}}/>
+
+                <TouchableOpacity onPress={() => {this.setState({joiningBill: true}), console.log("Preparing to Join Bill")}}>
+                    <Text style={styles.button_style}>Join Bill</Text>
+                </TouchableOpacity>
+            
                 </View>
+                
                 <View style={styles.sign_out_view}>
-                    <Button title='Sign Out' 
-                        onPress={() => {this.DB._signOutUser(), console.log("Preparing to Sign Out User")}}/>
+                    <TouchableOpacity onPress={() => {this.DB._signOutUser(), console.log("Preparing to Sign Out User")}}>
+                        <Text style={styles.button_style}>Sign Out</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
             );
@@ -100,16 +108,22 @@ export default class Home extends Component<Props>{
         else{
             return(
                 <View style={styles.joinBillViewStyle}>
-                    <Text style={{fontSize:40}}>Joining Bill</Text>
+
+                    <Text style={styles.header_style}>Join Bill</Text>
+
                     <TextInput style={styles.textInputBox} value={this.state.joinBillID}
                         onChangeText={(billID) => this.setState({joinBillID: billID})}/>
-                    <Text style={{color: "red"}}>{this.state.joinBillID_Error}</Text>
-                    <TouchableOpacity onPress={() => {this._billIDCheck(this.state.joinBillID.toUpperCase().trim()) ? console.log("Length Correct") : this.setState({joinBillID_Error: "Bill ID must be 4 characters long"})}}> 
-                        <Text style={{fontSize:20}}>Join</Text>
+
+                    <Text style={styles.err_message}>{this.state.joinBillID_Error}</Text>
+
+                    <TouchableOpacity onPress={() => {this._billIDCheck(this.state.joinBillID.length > 0 && this.state.joinBillID.toUpperCase().trim()) ? console.log("Length Correct") : this.setState({joinBillID_Error: "Bill ID must be 4 characters long"})}}> 
+                        <Text style={styles.button_style}>Join</Text>
                     </TouchableOpacity>
+
                     <TouchableOpacity onPress={() => {this.setState({joiningBill: false, joinBillID: "", joinBillID_Error: ""})}}>
-                        <Text style={{fontSize:20}}>Return</Text>
+                        <Text style={styles.button_style}>Return</Text>
                     </TouchableOpacity>
+
                 </View>
             );
         }
@@ -117,11 +131,12 @@ export default class Home extends Component<Props>{
 
     render(){       
         return(!this.state.userAuthenticated ?
-            <View>
-                <Text>Authenticating User...</Text>
+            <View style={styles.authentication_view}>
+                <Text style={styles.authentication_style}>Authenticating User...</Text>
+                <ActivityIndicator size='large' color='rgb(221, 193, 54)'/>
             </View>
             :
-            <View>
+            <View style={styles.home_view}>
                 {this._renderHomeScreen()}
             </View>
         )
@@ -129,34 +144,79 @@ export default class Home extends Component<Props>{
 }
 
 const styles = StyleSheet.create({
+    authentication_view: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgb(80, 120, 192)'
+        
+    },authentication_style: {
+        fontSize: 30,
+        fontFamily: 'Rocco',
+        color: 'rgb(251, 113, 5)'
+    },
+    
+    
+    home_view: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: 'rgb(80, 120, 192)',
+    },
+    home_style: {
+        marginTop: 50,
+        alignItems: 'center',
+    },
     searchInput: {
-        flexGrow: 1
+        flexGrow: 1,
+        backgroundColor: 'rgb(58, 102, 185)',
+    },
+    header: {
+        fontSize: 35,
+        fontFamily: 'Rocco',
+        color: 'rgb(251, 113, 5)',
     },
     button_view: {
-        marginTop: 20
+        marginTop: 15,
+        alignItems: 'center',
+    },
+    button_style: {
+        fontSize: 25,
+        fontFamily: 'Rocco',
+        color: 'rgb(251, 113, 5)'
     },
     sign_out_view: {
-        marginTop: 65
+        marginTop: 35,
+        alignItems: 'center'
     },
-    textInputBox: {
-        height: 40,
-        width: 250,
-        padding: 5,
-        borderWidth: 1,
-        borderColor: 'blue',
-    },
+    
+    
     joinBillViewStyle: {
         justifyContent: "space-between",
         marginTop: 200,
         alignItems: "center"
     },
-    joinBillButtonStyle:{
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "space-around"
+    textInputBox: {
+        height: 40,
+        width: 250,
+        borderWidth: 3,
+        borderColor: 'rgb(221, 193, 54)',
+        paddingLeft: 10,
+        color: 'rgb(251, 113, 5)',
+        fontFamily: 'Rocco',
+        fontSize: 20
     },
-    logoStyle: {
-       marginLeft: 25
+    header_style: {
+        fontSize: 40,
+        alignItems: "center",
+        fontFamily: 'Rocco',
+        color: 'rgb(251, 113, 5)',
+    },
+    err_message: {
+        color: 'rgb(221, 50, 20)',
+        fontFamily: 'Rocco',
+        marginTop: 5,
+        marginBottom: 5
+
     }
 });
 

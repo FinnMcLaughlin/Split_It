@@ -221,6 +221,9 @@ const styles = StyleSheet.create({
 function _checkForTerm(line, list){
   var valid = true;
 
+  console.log("Checking Term in Line: ")
+  console.log(line)
+
   for(var index=0; index < list.length; index++){
     if(line.toUpperCase().includes(list[index].toUpperCase())){
       valid = false;
@@ -234,16 +237,12 @@ function _checkForTerm(line, list){
 function _reOrderLine(line, items, itemsIndex, numCheck){
   //Get Pos of price
   var price = numCheck.exec(line)[0];
-  var priceIndex = numCheck.exec(line);
   
   //Check if anything follows price (price index + price length)
   //If there is, check item before or after - if line without price is empty, add to line, if not put price at the end of line
   if(!line.endsWith(price)){
-    console.log("--Reordering--")
     line = line.replace(price, "")
-    console.log("-- " + line)
     line = line + " " + price
-    console.log("-- " + line)
     items[itemsIndex] = line
   }
 
@@ -251,51 +250,45 @@ function _reOrderLine(line, items, itemsIndex, numCheck){
   return items;
 }
 
-function _produceItemObject(line, numCheck){
+function _checkForQuantity(line, numCheck){
+  var regularQuantityCheck = /\d+\b|\d+([x]|[X])\b/ //Checks for a quantity value i.e. '1 , 2x, 3X'
+  var irregularQuantityCheck = /\b([T])\b|\b([I])\b|\b([l])\b/
+  var no_price_line = line.replace(numCheck.exec(line)[0], "")
+
+  var quantity = [{found: null}, {value: 0}]
+
+  if(regularQuantityCheck.test(no_price_line)){
+    quantity[0] = {found: regularQuantityCheck.exec(no_price_line)[0]}
+    quantity[1] = {value: parseInt(regularQuantityCheck.exec(no_price_line)[0])}
+  }
+  else if(irregularQuantityCheck.test(no_price_line)){
+    quantity[0] = {found: irregularQuantityCheck.exec(no_price_line)[0]}
+    quantity[1] = {value: 1}
+  }
+  
+  return quantity
+}
+
+function _produceItemObject(line, numCheck, quantity){
   var priceIndex = numCheck.exec(line).index
   var itemName = line.substring(0, priceIndex-1)
-  var itemPrice = line.substring(priceIndex)
+  var itemPrice = line.substring(priceIndex) / quantity;
 
   console.log("Item: " + itemName + " Price: " + itemPrice);
-  console.log("----------------------")
-  console.log(" ")
-  return { item: itemName, data: {price: itemPrice, chosenBy: [""]}}
+  // console.log("----------------------")
+  // console.log(" ")
+  return { item: itemName, data: {price: itemPrice.toFixed(2), chosenBy: [""]}}
 }
 
 function _formatOCROutput(data){
   console.log("Formatting Output");
   let TD = data.TextDetections;
   var numCheck = /(?:\d+)?\.\d+/; //Checks for Floating Number
-  var quantityCheck = /\d+([x]|[X]) | \d+\s\b | \b([T])\b | \b([I])\b/; //Checks for a quantity value i.e. '1 , 2x, 3X' 
+  
   var itemList = [];
   var itemIndex = 0;
   var invalidKeyChars = ['.', '#', '$', '/', '[', ']', '<', '>'];
   var blacklistTerms = ['Total', 'Subtotal', 'Visa', 'Debit', 'GST']
-
-  // console.log(TD)
-  // console.log("---------------Last Result: ")
-  // console.log(TD[TD.length - 1]);
-
-  // var test = false;
-  // var index = TD.length - 1;
-  // var wordCount = 0;
-
-  // console.log("---------------Specific Result: ")
-
-
-  // while(!test){
-  //   if(TD[index].Type == 'LINE'){
-  //     console.log(TD[index])
-  //     console.log("Word Count: " + wordCount)
-  //     test = true;
-  //   }
-  //   else{
-  //     wordCount = wordCount + 1;
-  //   }
-
-  //   index = index - 1;
-  // }
-
 
   for(var TD_Index=0; TD_Index < TD.length; TD_Index++){
     if(TD[TD_Index].Type == "LINE"){     
@@ -335,63 +328,41 @@ function _formatOCROutput(data){
     }
 
     if(!numCheck.test(currItem)){
+      console.log("Item Doesn't Contain Price: " + currItem)
       itemList.splice(itemIndex, 1)
       itemIndex--;
     }
     else{
       itemList = _reOrderLine(currItem, itemList, itemIndex, numCheck)
       currItem = itemList[itemIndex]
-      itemList[itemIndex] = _produceItemObject(currItem, numCheck)
 
-      // var quantityValue = 0;
+      console.log("Reorder Line: " + currItem)
 
-      // if(quantityCheck.test(currItem)){
-      //   quantityValue = quantityCheck.exec(currItem)
+      var itemQuantityInfo = _checkForQuantity(currItem, numCheck);
+      var itemQuantityValue = itemQuantityInfo[1].value
 
-      //   console.log("Quantity: " + quantityValue + " at index: " + itemIndex);        
-      // }
+      console.log("ItemQuantity Info: ")
+      console.log(itemQuantityInfo)
 
-      //console.log(numCheck.exec(currItem))
-      // console.log("-----------------------------------")
+      if(itemQuantityValue > 0){
+        var itemQuantityFound = itemQuantityInfo[0].found
+        currItem = currItem.replace(itemQuantityFound, "")
+        console.log("Line Fixed: " + currItem)
+        
+        itemList[itemIndex] = _produceItemObject(currItem, numCheck, itemQuantityValue)
+
+        for(var index=1; index < itemQuantityValue; index++){
+          itemList.splice(itemIndex + index, 0, _produceItemObject(currItem, numCheck, itemQuantityValue))
+          itemIndex++
+        }
+      }
+      else{
+        itemList[itemIndex] = _produceItemObject(currItem, numCheck, 1)
+      }
     }
-
-    //currItem = { item: itemName, data: {price: itemPrice, chosenBy: [""]}}
-
   }
-
-  console.log(itemList)
-
-  // for(var itemIndex=0; itemIndex < itemList.length; itemIndex++){
-  //   if(numCheck.exec(itemList[itemIndex])){
-  //     var splitIndex = numCheck.exec(itemList[itemIndex]).index;
-  //     var itemName = itemList[itemIndex].substring(0, splitIndex-1);
-  //     var itemPrice = itemList[itemIndex].substring(splitIndex);
-
-  //     for(var invalidKeyCharsIndex=0; invalidKeyCharsIndex < invalidKeyChars.length; invalidKeyCharsIndex++){
-  //       var invalidChar = invalidKeyChars[invalidKeyCharsIndex];
-
-  //       if(itemName.includes(invalidChar)){
-  //         itemName = itemName.replace(invalidChar, " ");
-  //       }
-  //     }
-      
-  //     if(itemName.length < 1){
-  //       itemName = "Invalid";
-  //     }
-
-  //     // itemList[itemIndex] = {[itemName]: {
-  //     //   "Price": itemPrice,
-  //     //   "Chosen By": [""]
-  //     //   }
-  //     // }
-
-  //     //{ item: "Potatoes", data: {price: "€8.50", chosenBy: ["Finn"]}}
-
-  //     itemList[itemIndex] = { item: itemName, data: {price: itemPrice, chosenBy: [""]}}
-  //   }
-  // } 
-  
-  //console.log(itemList)   
+ 
+  console.log(itemList)   
   return itemList
 }
   

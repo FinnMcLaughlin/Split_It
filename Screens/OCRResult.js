@@ -181,7 +181,7 @@ export default class OCRResult extends Component<Props>{
 
         for(var itemIndex=0; itemIndex < items.length; itemIndex++){
           var itemPrice = parseFloat(items[itemIndex].data.price.replace(/[^\d.-]/g, ''));
-          
+          //var itemPrice = items[itemIndex].data.price
           totalRemainingValue = totalRemainingValue + itemPrice
         }
 
@@ -396,7 +396,7 @@ export default class OCRResult extends Component<Props>{
         }
       }
       else{
-        if(!this.state.setCTP && this.state.editModalClosing){
+        if(!this.state.isHost && this.state.setCTP && this.state.editModalClosing){
           alert("Bill Total: " + this.state.totalPrice + " and Calculated Total: " + this.state.calculatedTotalPrice
           + " does not match.\nReview the item list and edit any necessary items to match the bill");
           this.setState({editModalClosing: false});
@@ -414,7 +414,7 @@ export default class OCRResult extends Component<Props>{
       const priceCheck = /(?:\d+)?\.\d+/;
 
       return(
-        !this.state.setTotalPrice 
+        !this.state.setTotalPrice && this.state.isHost 
         ?
           <View style={styles.enterPriceStyle}>
             <Text>Enter Bill Total</Text>
