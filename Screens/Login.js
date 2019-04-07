@@ -9,9 +9,11 @@ import firebase from 'firebase';
 type Props = {};
 
 export default class Login extends Component{
-    static NavigationOptions = {
-        title: 'Login',
-      };
+    static navigationOptions = {
+        headerStyle: {
+            backgroundColor: 'rgb(221, 193, 54)',
+        }
+    };
   
       constructor(props){
         super(props);
@@ -48,7 +50,7 @@ export default class Login extends Component{
                 </View>                    
                     
                 <View style={styles.button_view}>
-                    <TouchableOpacity onPress={() => {this._LoginUser(this.state.email, this.state.password)}}>
+                    <TouchableOpacity onPress={() => {this._LoginUser(this.state.email.trim(), this.state.password.trim())}}>
                         <Text style={styles.button_style}>Login</Text>
                     </TouchableOpacity>
                 </View>

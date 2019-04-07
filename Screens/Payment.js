@@ -8,16 +8,21 @@ import firebase from '@firebase/app';
 type Props = {};
 
 export default class Payment extends Component<Props>{
-    static NavigationOptions = {
-        title: 'Payment',
-      };
+    static navigationOptions = {
+        headerStyle: {
+            backgroundColor: 'rgb(221, 193, 54)',
+        }
+    };
 
     constructor(props){
         super(props);
 
         this.state = {
-            userBillTotal: 2.50
+            userBillTotal: this.props.navigation.state.params.finalTotal,
+            hostAccount: this.props.navigation.state.params.hostAccount
         }
+
+        console.log("Bill Total: " + this.state.userBillTotal + " Host: " + this.state.hostAccount)
     }
 //'https://splitit.localtunnel.me/'
     
@@ -26,7 +31,7 @@ export default class Payment extends Component<Props>{
             <View style={styles.modalView}>
                 <View style={ styles.modalView }>
                     <WebView
-                        source={{uri: 'http://729d37d0.ngrok.io/', method: 'POST', body: `price=${this.state.userBillTotal}&host=${this.props.navigation.state.params.hostAccount}`}}
+                        source={{uri: 'http://d5532eb9.ngrok.io/', method: 'POST', body: `price=${this.state.userBillTotal}&host=${this.state.hostAccount}`}}
                         
                         onNavigationStateChange = {data => {                          
                             console.log(data)
@@ -36,7 +41,7 @@ export default class Payment extends Component<Props>{
                             }                          
                         }
                         
-                        //injectedJavaScript={`document.index.submit()`}
+                        injectedJavaScript={`document.index.submit()`}
                     />
                 </View>
             </View>

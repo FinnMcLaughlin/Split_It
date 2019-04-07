@@ -30,9 +30,11 @@ import Database from './Database';
 type Props = {};
 
 export default class Home extends Component<Props>{
-    static NavigationOptions = {
-        title: 'Home',
-      };
+    static navigationOptions = {
+        headerStyle: {
+            backgroundColor: 'rgb(221, 193, 54)',
+        }
+    };
 
     constructor(props){
         super(props);
@@ -73,7 +75,7 @@ export default class Home extends Component<Props>{
     //--2
     componentDidMount(){
         firebase.auth().onAuthStateChanged(user => {(user ? this.setState({ userAuthenticated: true, userDisplayName: this.DB._getCurrentUserDisplayName()}) : this.props.navigation.navigate("Login"))});
-        //firebase.auth().onAuthStateChanged(user => {this.props.navigation.navigate(user ? "Login" : "Login")});
+        //firebase.auth().onAuthStateChanged(user => {this.props.navigation.navigate(user ? "Payment" : "Login")});
     }
   
     //--3
@@ -150,7 +152,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: 'rgb(80, 120, 192)'
         
-    },authentication_style: {
+    },
+    authentication_style: {
         fontSize: 30,
         fontFamily: 'Rocco',
         color: 'rgb(251, 113, 5)'

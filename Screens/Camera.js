@@ -1,7 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { AppRegistry, Platform, StyleSheet, Text, View, Button, TouchableOpacity, ImageBackground, Dimensions, Image, ImageEditor, ActivityIndicator } from 'react-native';
+import { AppRegistry, Platform, StyleSheet, Text, View, Button, TouchableOpacity, ImageBackground, Dimensions, Image, ToastAndroid, ActivityIndicator } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import RNFetchBlob from 'rn-fetch-blob';
 import { Buffer } from 'safe-buffer';
@@ -14,15 +14,17 @@ var AWS = require('aws-sdk/react-native');
 
 
 
-const cameraWidth = Dimensions.get('screen').width;// * 0.875;
-const cameraHeight = ( (Dimensions.get('screen').width * 16) / 9 ) - 80;// * 0.875;
+const cameraWidth = Dimensions.get('screen').width;
+const cameraHeight = ( (Dimensions.get('screen').width * 16) / 9 ) - 80;
 const iconWidth = cameraWidth * 0.2;
 const iconHeight = cameraHeight * 0.1;
 
 export default class Camera extends Component<Props>{
-    static NavigationOptions = {
-        title: 'Camera',
-    };
+  static navigationOptions = {
+    headerStyle: {
+        backgroundColor: 'rgb(221, 193, 54)',
+    },
+  };
     
     constructor(props)
     {
@@ -92,6 +94,7 @@ export default class Camera extends Component<Props>{
         if (err) console.log(err, err.stack);
         else {          
           console.log("Data Detected")
+          
           var content = _formatOCROutput(data)
           dis.DB._billIDGen(navigate, content);
         }
@@ -140,7 +143,7 @@ export default class Camera extends Component<Props>{
               <Image style={styles.icon} source={require('../Resources/cross_icon.png')}/>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => {console.log("Picture Accepted"), this._formatPicture()}}>
+            <TouchableOpacity onPress={() => {console.log("Picture Accepted"), this._formatPicture(), this.setState({pictureAccepted: true})}}>
               <Image style={styles.icon} source={require('../Resources/tick_icon.png')}/>
             </TouchableOpacity>
           </View>
@@ -149,27 +152,40 @@ export default class Camera extends Component<Props>{
     }
   }
 
-  //this.setState({pictureAccepted: true})
 
   render(){
       return(!this.state.pictureAccepted
         ?
         <View style={{position: 'relative'}}>
           {this._renderCamera()}
-          {this._renderIcon()}               
+          {this._renderIcon()}       
+          {ToastAndroid.show("Line first bill item within the boundry for the best result", ToastAndroid.LONG)}     
         </View>
         
         :
         
-        <View>
-          <Text>Picture Formatting</Text>
-          <ActivityIndicator size='large' color='red'/>
+        <View style={styles.authentication_view}>
+          <Text style={styles.authentication_style}>Picture Formatting</Text>
+          <ActivityIndicator size='large' color='rgb(221, 193, 54)'/>
         </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  authentication_view: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgb(80, 120, 192)'
+    
+  },
+  authentication_style: {
+      fontSize: 30,
+      fontFamily: 'Rocco',
+      color: 'rgb(251, 113, 5)'
+  },
+
   camera: {
     height: cameraHeight,
     width: cameraWidth,
@@ -178,7 +194,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingTop: (cameraHeight * (6/8)) - (iconHeight),
+    paddingTop: (cameraHeight * (6/8)),
     paddingLeft: iconWidth / 2
   },
   cameraIcon: {
@@ -187,26 +203,23 @@ const styles = StyleSheet.create({
   },
 
   borderTLIcon: {
-    marginLeft: cameraWidth / 8,
-    marginTop: cameraHeight / 8
+    marginLeft: cameraWidth / 20,
   },
   borderTRIcon: {
-    marginLeft: (cameraWidth * (4/8)) - (iconWidth / 2),
-    marginTop: cameraHeight / 8
+    marginLeft: (cameraWidth * (18 / 20)) - (iconWidth / 2),
   },
   borderTLContainer: {
-    paddingLeft: cameraWidth / 12,
-    paddingTop: cameraHeight / 12
+    paddingLeft: cameraWidth / 20,
   },
   borderTRContainer: {
-    paddingLeft: (cameraWidth * 11 / 12) - iconWidth,
-    paddingTop: cameraHeight / 12
+    paddingLeft: (cameraWidth * 18 / 20) - iconWidth,
   },
 
   acceptButtonPos: {
     position: 'absolute',
     bottom: 0,
-    paddingLeft: (cameraWidth / 2) - (iconWidth) + (iconWidth / 4)
+    paddingLeft: (cameraWidth / 2) - (iconWidth) + (iconWidth / 4),
+    paddingBottom: iconHeight / 4
   },
   acceptIcon: {
     height: iconHeight,
@@ -275,6 +288,9 @@ function _produceItemObject(line, numCheck, quantity){
   var itemPrice = line.substring(priceIndex) / quantity;
 
   console.log("Item: " + itemName + " Price: " + itemPrice);
+  if(itemName[0] == " "){
+    itemName = itemName.substring(1)
+  }
   // console.log("----------------------")
   // console.log(" ")
   return { item: itemName, data: {price: itemPrice.toFixed(2), chosenBy: [""]}}
