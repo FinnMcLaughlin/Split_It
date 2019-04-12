@@ -1,6 +1,9 @@
 README
-Split It - Bill Splitting Application using Optical Character Recognition
+Split It - Bill Splitting Application using Optical Character Recognition and P2P Transactions
 Finn McLaughlin C15536837
+
+## DISCLAIMER ##
+Due to the restrictions of being unable to push specific API credentials to Github, to be able to run the final application I will need to be contacted.
 
 ## Introduction
 Split It allows users to split a bill amongst several cards by taking a picture
@@ -15,64 +18,14 @@ A list of dependencies is found in the package.json file. To link these dependen
 
 Upon installing yarn or npm make sure tho remove the concatanted part of the string returned by getAdbPath() in runAndroid.js as well as removing the concatanated string added to adbPath in _logAndroid() in logAndroid.js
 
+As this is more of a proof of concept application, to successfully finish the payment part of the process, the backend server must be run alongside ngrok, to allow the localhost URL to be tunneled through a new URL, which needs to be manually put in the payment screen before loading the application on each device.
+
 
 ## Usage
-App.js provides the stack navigator configuration, which allows the application to navigate from
-scren to screen. The stack navigator is created using the react-navigation library. Each screen that can be navigated to
-will need to declare that screens title. Using "navigation.navigate(screen_title)", the application will navigate 
-to the screen in the stack navigator corresponding to 'screen_title'.
+Once successfully logged in, a user can choose to host a bill, which will take them to a camera screen, or join a bill, which will then prompt them to enter a Bill ID to join.
 
-From there the application checks if the user has authentication to access the application. This is done in the
-Loading.js screen. Loading.js implements the firebase authentication function '.onAuthStateChanged()', which checks the current users
-login session. If the user is logged in already, they navigate straight to the Home.js screen, if not they are
-navigated to the Login.js screen. Loading.js also contains the _SignOut function to allow the user to logout from
-the Home.js  screen using the firebase authentication function '.SignOut()'. 
+Host User - The host user takes a picture of a bill, reviews it, and accepts the picture for formatting. This items and prices in the image are extracted and a list is generated using this extraceed data. The user will then be prompted to enter in the total price of the bill, which will be compared to the calculated bill total (using the extracted prices). If they are not equal, the bill ID is not displayed, preventing the host from sharing the bill. The host must then review the items and prices with the bill to update any inaccuracies. Once the total price and calculated price are equal, the bill ID is displayed, and the host can share the list with other users. The user chooses the items they are paying for / splitting by pressing the choose buttons on each row. When all items have been accounted for, the remaining price will disapear from the footer and "Finished" will be displayed. Clicking that will allow the user to review their individual total. Once each user has finished choosing, the host user is brought to a waiting screen, until each joining user transfers the funds to the host user's account.
 
-The Login.js screen allows the user to login using the relevant credentials (email and password) and firebase checks
-whether the inputted credentials match those stored in the database. If they do the user is logged in, and navigates
-to the Home.js screen. If not the user remains at the Login.js screen. From here the user can also navigated to the
-Register.js screen to allow them to register their credentials for future logging in.
+Joining User - The joining user inputs the bill ID given to them by the host user, in order to gain access to the bill list. The user chooses the items they are paying for / splitting by pressing the choose buttons on each row. When all items have been accounted for, the remaining price will disapear from the footer and "Finished" will be displayed. Clicking that will allow the user to review their individual total. Once each user has finished choosing, the joining user is brought to a PayPal login screen. The user logs into their account, accept the payment, and the funds are transfered to the host.
 
-The Register.js screen allows the user to register using an email address, password, and their name. Once
-these have been entered, the Database.js class function '_newUser()' is called, and the inputs are passed to it. 
-The firebase authentication checks to make sure the email address is not yet on the system, and if so the user is 
-successfully registered, logged in, and navigates to the Home screen.
 
-The Home.js screen is the main hub for the user. From here the user can take a picture of some text for optical 
-character recognition by navigating to the Camera.js screen, to display data on screen from a test room in the
-Display.js screen, create a new room and push it to the database, or sign themselves out. When the create a new 
-room button is pressed, the function '_RoomIDGen()' is used to generate a random room ID string. The string 
-ID_chars contains the number characters 0-9, as well as each uppercase character from A-Z is declared. From 
-within the do/while loop, the new room ID string is generated by choosing 4 random characters from ID_chars. This
-4 character string is then passed to the Database.js class function '_newRoom()'. The layout of the screen is 
-created using various buttons and a styleSheet, a react-native feature to implement CSS into the application. 
-Many of the screens, if not all of them, implement a styleSheet to some extent.
-
-If the user wants to take a picture of some text, the navigate from Home.js screen to the Camera.js screen. The screen 
-accesses the devices camera component, allowing the user to take a picture. Once the picture is taken, the rn-fetch-blob
-function converts the image's uniform resource identifyer (uri) into a 64base string to prepare it for processing. After
-this, the base64 string is put in a byte buffer, and stored within the parameter variable, in preperation to be sent to
-the cloud for the text detection to occur. A new instance of AWS's Rekognition class is called, and the byte buffer is
-passed to it. Once the text has been extracted from the image successfully, the returned data is pushed to the database
-as a collection of the new room, in this case a test room called "T3ST". The user is then navigated to the OCRResult.js
-screen to view the results.
-
-Once at the OCRResult.js screen, the application will send a pull request to the database to retrieve the relevant
-OCR data as soon as it has been pushed to the database. Firebase Real Time database allows the application to listen
-for any updates that happen within the database, and the OCRResult.js screen updates the text displayed to the text 
-detected from the previously taken photo as soon as it has been pushed.
-
-If the user wishes to see displayed data from the test room, they would navigate from Home.js screen to Display.js
-screen. Similarly to OCRResult.js, this screen simply displays some test data and will update it in real time using
-a firebase real time database function.
-
-The database class contains the database related functions that might be executed at various points of the application
-run-time. The _newUser function is used to insert a newly registered user to the database. This function takes in the 
-new users ID, their email and name, and pushes the data to the Users collection of the database. The function _newRoom
-is used to create the database collection, whose value corresponds to the generated ID from the Home.js function 
-_RoomIDGen that is passed to this function. The path to this new collection is created by adding "Rooms/" to the start
-of the room ID. The contents of the collection are initialized to null string values. These values are then pushed up 
-to the database and the new room is created. The function _GetTextResult is used as a test function in an attempt to 
-pull the OCR data that had been pushed up to the database in order to display it on screen. The path to the data is used
-by concatanating the room ID that had been passed to the function to the format "Rooms/RoomID/data/TextDetections". The 
-result of the pulled data is returned.
