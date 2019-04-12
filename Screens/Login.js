@@ -20,7 +20,8 @@ export default class Login extends Component{
 
         this.state = {
             email: "EMAIL",
-            password: "PASSWORD"
+            password: "PASSWORD",
+            err_message: ""
         };
     }
 
@@ -28,7 +29,7 @@ export default class Login extends Component{
     {
         firebase.auth().signInWithEmailAndPassword(email, password)
         .then( () => {this.props.navigation.navigate("Home"), console.log("Successfully logged in ", email)})
-        .catch( () => {this.props.navigation.navigate("Login"), console.log("Unable to sign in")})
+        .catch( () => {this.props.navigation.navigate("Login"), console.log("Unable to sign in"), this.setState({err_message: "Email or Password Invalid"})})
     }
   
 
@@ -47,7 +48,11 @@ export default class Login extends Component{
                 <View style={styles.textInput_style}>
                     <TextInput style={styles.textInputBox}  onFocus={() => this.setState({password: ""})}
                         onChangeText = {(password) => this.setState({password: password})} value={this.state.password}/>
-                </View>                    
+                </View>     
+
+                <View style={styles.textInput_style}>
+                    <Text style={styles.err_style}>{this.state.err_message}</Text>
+                </View>               
                     
                 <View style={styles.button_view}>
                     <TouchableOpacity onPress={() => {this._LoginUser(this.state.email.trim(), this.state.password.trim())}}>
@@ -96,6 +101,11 @@ const styles = StyleSheet.create({
     },
     logo_style: {
        alignItems: 'center'
+    },
+    err_style: {
+        fontSize: 15,
+        fontFamily: 'Rocco',
+        color: 'rgb(255, 25, 25)'
     }
 });
 

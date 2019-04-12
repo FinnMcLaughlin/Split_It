@@ -8,7 +8,6 @@ import Database from './Database';
 import Login from './Login';
 import Register from './Register';
 import Payment from './Payment';
-import _Error from './_Error';
 import { NativeScreen } from 'react-native-screens';
 
 console.disableYellowBox = true;
@@ -21,6 +20,5 @@ const navigate = createStackNavigator({
   Results: { screen: OCRResult},
   Payment: { screen: Payment },
   Database: { screen: Database },
-  _Error: { screen: _Error }
 });
 export default navigate;

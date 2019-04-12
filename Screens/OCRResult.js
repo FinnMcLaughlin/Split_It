@@ -33,6 +33,7 @@ export default class OCRResult extends Component<Props>{
             billID: this.props.navigation.state.params.ID,
             userID: firebase.auth().currentUser.uid,
             err_message: "",
+            initAlert: false,
             
             userInit: false,
             isHost: false,
@@ -65,13 +66,14 @@ export default class OCRResult extends Component<Props>{
             RTP_equal_TP: false,
 
             userBillPrice: 0.00,   
+            paypal_tax: 0.00,
             userFinalBillPrice: 0.00
         }
 
         let dis = this;
 
         
-        firebase.database().ref(`Rooms/${this.state.billID}/host`).on('value', function(hostInfo){
+        firebase.database().ref(`Bills/${this.state.billID}/host`).on('value', function(hostInfo){
           if(hostInfo.val() != null){
             var hostInfo = hostInfo.val();
 
@@ -95,7 +97,7 @@ export default class OCRResult extends Component<Props>{
           }
         });
         
-        firebase.database().ref(`Rooms/${this.state.billID}/content`).on('value', function(itemInfo){  
+        firebase.database().ref(`Bills/${this.state.billID}/content`).on('value', function(itemInfo){  
           var itemInfo = itemInfo.val();
 
           if(!dis.state.setCTP){
@@ -112,15 +114,13 @@ export default class OCRResult extends Component<Props>{
           }
         }); //
 
-        firebase.database().ref(`Rooms/${this.state.billID}/priceValues`).on('value', function(priceValues){   
+        firebase.database().ref(`Bills/${this.state.billID}/priceValues`).on('value', function(priceValues){   
           var prices = priceValues.val();
 
           if(prices.billTotal != ""){
-            console.log("Setting Total Price")
             dis.setState({totalPrice: prices.billTotal.value, setTotalPrice: true});
           
             if(prices.calculatedTotal != ""){
-              console.log("This.SetState.CalculatedPrice")
               dis.setState({calculatedTotalPrice: prices.calculatedTotal.value})     
             }
 
@@ -136,6 +136,7 @@ export default class OCRResult extends Component<Props>{
                 }
                 else{
                   equal = false;
+                  
                 }
               
                 dis.setState({RTP_equal_TP: equal});
@@ -143,7 +144,7 @@ export default class OCRResult extends Component<Props>{
           }
         }); //
 
-        firebase.database().ref(`Rooms/${this.state.billID}/users`).on('value', function(userInfo){
+        firebase.database().ref(`Bills/${this.state.billID}/users`).on('value', function(userInfo){
           if(userInfo.val() != null){
             var values = userInfo.val();
             var currentUser = dis.state.userID;
@@ -153,12 +154,13 @@ export default class OCRResult extends Component<Props>{
            
             if(values[currentUser].itemsChosenTotal != null){
               var chosenItemsTotal = values[currentUser].itemsChosenTotal;
-              var calculatedTax = (( chosenItemsTotal / 100) * 5.4 ) + 0.2;
+              var calculatedTax = (((chosenItemsTotal / 100) * 3.4) + 0.2) + ((chosenItemsTotal / 100) * 2)//(( chosenItemsTotal / 100) * 5.4 ) + 0.3;
               var finalTotal = Math.round((chosenItemsTotal + calculatedTax) * 100) / 100;
 
               dis.setState({
                 userBillPrice: values[currentUser].itemsChosenTotal.toFixed(2),
-                userFinalBillPrice: finalTotal
+                paypal_tax: calculatedTax.toFixed(3),
+                userFinalBillPrice: finalTotal.toFixed(2)
               });
             }
 
@@ -176,18 +178,15 @@ export default class OCRResult extends Component<Props>{
 
             dis.state.remainingUsers = remaining_users;
 
-            console.log("Host PayPal: " + dis.state.hostPaypal)
             if(no_users == no_finished_users && dis.state.hostPaypal != ""){
               dis.setState({reviewModalVisible: false});
-              dis.props.navigation.navigate("Payment", {finalTotal: dis.state.userFinalBillPrice, hostAccount: dis.state.hostPaypal});
+              dis.props.navigation.navigate("Payment", {isHost: dis.state.isHost, billID: dis.state.billID, subTotal: dis.state.userBillPrice, finalTotal: dis.state.userFinalBillPrice, hostAccount: dis.state.hostPaypal});
             }
           }
         }); //
     } //
     
-    _calculateRemainingBillPrice(items){
-      //console.log(items)
-      
+    _calculateRemainingBillPrice(items){      
       if(items != null){
         var totalRemainingValue = 0;
 
@@ -195,13 +194,10 @@ export default class OCRResult extends Component<Props>{
           var itemPrice = parseFloat(items[itemIndex].data.price.replace(/[^\d.-]/g, ''));
           totalRemainingValue = totalRemainingValue + itemPrice
         }
-
-        console.log(totalRemainingValue)
   
         this.DB._setRemainingTotal(this.state.billID, totalRemainingValue);
 
         if(!this.state.RTP_equal_TP){
-          console.log("Setting Calculated Total Price")
           this.DB._setCaclulateTotalPrice(this.state.billID, totalRemainingValue);
         }
         else{
@@ -258,15 +254,24 @@ export default class OCRResult extends Component<Props>{
 
     _renderHostOrJoinOptions(item, index){
       if(this.state.isHost){
+        if(this.state.RTP_equal_TP){
         return(
           <View style={styles.choice_view}>
             <TouchableOpacity  onPress={() => {this._chooseItem(index)}}><Text style={styles.choice_text}>Choose</Text></TouchableOpacity>
-            <TouchableOpacity  onPress={() => {console.log("Modal Visible"), this.setState({ editModalVisible: true, modalItemName: item.item, 
-              modalItemPrice: item.data.price, modalItemIndex: index })}}>
-                <Text style={styles.host_text}>Edit</Text>
-            </TouchableOpacity>
           </View>
         );
+        }
+        else{
+          return(
+            <View style={styles.choice_view}>
+              <TouchableOpacity  onPress={() => {this._chooseItem(index)}}><Text style={styles.choice_text}>Choose</Text></TouchableOpacity>
+              <TouchableOpacity  onPress={() => {console.log("Modal Visible"), this.setState({ editModalVisible: true, modalItemName: item.item, 
+                modalItemPrice: item.data.price, modalItemIndex: index })}}>
+                  <Text style={styles.host_text}>Edit</Text>
+              </TouchableOpacity>
+            </View>
+          );
+        }
       }
       else{
         return(
@@ -313,7 +318,7 @@ export default class OCRResult extends Component<Props>{
                 <View>
                   <Text style={styles.edit_text_style}>{itemName}</Text>
                   <Text style={styles.edit_text_style}>{itemPrice}</Text>
-                  <TouchableOpacity onPress={() => {console.log("Modal Exit"), this.setState({newItemName: "", newItemPrice: "", editModalVisible: false, editModalClosing: true})}}><Text style={styles.edit_text_style}>Exit</Text></TouchableOpacity>
+                  <TouchableOpacity onPress={() => {console.log("Modal Exit"), this.setState({newItemName: "", newItemPrice: "", editModalVisible: false, editModalClosing: true, err_message: ""})}}><Text style={styles.edit_text_style}>Exit</Text></TouchableOpacity>
                 </View>
                 <View style={{marginRight: 15}}>
                   <TouchableOpacity  onPress={() => {console.log("Change Item Name"), this.setState({editItemName: true})}}><Text style={styles.itemDataStyle}>Edit</Text></TouchableOpacity>
@@ -329,14 +334,15 @@ export default class OCRResult extends Component<Props>{
                   <Text style={styles.edit_text_style}>{itemName}</Text>
                   <TextInput style={styles.input_box} value={newItemName}
                     onChangeText={(newItemName) => this.setState({newItemName: newItemName})}/>
+                  <Text style={styles.error_text}>{this.state.err_message}</Text>
                   
                   <View style={styles.edit_button_view}>
-                    <TouchableOpacity  onPress={() => {console.log("Cancel Item Name Update"), this.setState({editItemName: false})}}>
+                    <TouchableOpacity  onPress={() => {console.log("Cancel Item Name Update"), this.setState({editItemName: false, err_message: ""})}}>
                       <Text style={styles.edit_cancel_style}>Cancel</Text>
                     </TouchableOpacity>
                     
                     <TouchableOpacity  onPress={() => {this.state.newItemName.length > 1 ? ( this.DB._updateItemInfo(this.state.billID, itemIndex, "item", this.state.newItemName), 
-                      this.setState({modalItemName: this.state.newItemName, editItemName: false}), console.log("Accept Item Name Update: " + this.state.newItemName) ) : alert("Not Long Enough")}}>
+                      this.setState({modalItemName: this.state.newItemName, editItemName: false, err_message: ""}), console.log("Accept Item Name Update: " + this.state.newItemName) ) : this.setState({err_message: "Invalid Item Name"})}}>
                       <Text style={styles.edit_accept_style}>Accept</Text>
                     </TouchableOpacity>
                   </View>
@@ -357,14 +363,15 @@ export default class OCRResult extends Component<Props>{
                   <Text style={styles.edit_text_style}>{itemPrice}</Text>
                   <TextInput style={styles.input_box} value={newItemPrice}
                     onChangeText={(newItemPrice) => this.setState({newItemPrice: newItemPrice})}/>                 
-                  
+                  <Text style={styles.error_text}>{this.state.err_message}</Text>
+
                   <View style={styles.edit_button_view}>
-                    <TouchableOpacity  onPress={() => {console.log("Cancel Item Price Update"), this.setState({editItemPrice: false})}}>
+                    <TouchableOpacity  onPress={() => {console.log("Cancel Item Price Update"), this.setState({editItemPrice: false, err_message: ""})}}>
                       <Text style={styles.edit_cancel_style}>Cancel</Text>
                     </TouchableOpacity>   
 
                     <TouchableOpacity  onPress={() => {this.state.newItemPrice.length > 1 ? ( this.DB._updateItemInfo(this.state.billID, itemIndex, "price", this.state.newItemPrice), 
-                      this.setState({modalItemPrice: this.state.newItemPrice, editItemPrice: false}), console.log("Accept Item Price Update") ) : alert("Not Long Enough")}}>
+                      this.setState({modalItemPrice: this.state.newItemPrice, editItemPrice: false, err_message: ""}), console.log("Accept Item Price Update") ) : this.setState({err_message: "Invalid Item Price"})}}>
                       <Text style={styles.edit_accept_style}>Accept</Text>
                     </TouchableOpacity>
                   </View>
@@ -385,7 +392,9 @@ export default class OCRResult extends Component<Props>{
 
       return(
         <View style={styles.review_modal_view}>
-            <Text style={styles.review_text_style}>Your Total: {this.state.userBillPrice}</Text>
+            <Text style={styles.review_text_style}>Sub Total: {this.state.userBillPrice}</Text>
+            <Text style={styles.review_text_style}>PayPal Tax: {this.state.paypal_tax}</Text>
+            <Text style={styles.review_text_style}>Final Total: {this.state.userFinalBillPrice}</Text>
             <Text style={styles.review_text_style}>Waiting For: {this._renderWaitingForUsers()}</Text>
             <View style={{alignItems: 'center'}}>
               <TouchableOpacity onPress={() => {this.DB._updateUserBillData(billID, userID, "finishedChoosing", true)}}>
@@ -420,7 +429,7 @@ export default class OCRResult extends Component<Props>{
         }
       }
       else{
-        if(this.state.isHost && !this.state.setCTP && this.state.editModalClosing){
+        if(this.state.isHost && !this.state.RTP_equal_TP && this.state.editModalClosing){
           alert("Bill Total: " + this.state.totalPrice + " and Calculated Total: " + this.state.calculatedTotalPrice
           + " does not match.\nReview the item list and edit any necessary items to match the bill");
           this.setState({editModalClosing: false});

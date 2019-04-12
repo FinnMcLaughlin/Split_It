@@ -74,13 +74,14 @@ export default class Home extends Component<Props>{
 
     //--2
     componentDidMount(){
-        firebase.auth().onAuthStateChanged(user => {(user ? this.setState({ userAuthenticated: true, userDisplayName: this.DB._getCurrentUserDisplayName()}) : this.props.navigation.navigate("Login"))});
+        firebase.auth().onAuthStateChanged(user => {(user ? this.setState({ userAuthenticated: true }) : this.props.navigation.navigate("Login"))});        
         //firebase.auth().onAuthStateChanged(user => {this.props.navigation.navigate(user ? "Payment" : "Login")});
     }
   
     //--3
     _renderHomeScreen(){
         if(!this.state.joiningBill){
+            console.log(this.state.userDisplayName)
             return(
             <View>
                 <View style={styles.home_style}>

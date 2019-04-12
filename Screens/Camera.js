@@ -11,11 +11,15 @@ import { relative } from 'path';
 
 
 var AWS = require('aws-sdk/react-native');
+//AWS Configuration
+
+const cameraWidth = 
+Dimensions.get('screen').width;
+
+const cameraHeight = 
+( (Dimensions.get('screen').width * 16) / 9 ) - 80;
 
 
-
-const cameraWidth = Dimensions.get('screen').width;
-const cameraHeight = ( (Dimensions.get('screen').width * 16) / 9 ) - 80;
 const iconWidth = cameraWidth * 0.2;
 const iconHeight = cameraHeight * 0.1;
 
@@ -41,35 +45,15 @@ export default class Camera extends Component<Props>{
       this.DB = new Database();
     }
 
-  _cropTest(){
-          // Image.getSize(data.uri, (width, height) => {console.log("Image W:H " + width + ":" + height)});
-          // console.log("Camera W " + cameraWidth)
-          // //console.log("Start: W:H " + cameraWidth / 8 + ":" + cameraHeight / 8);
-          // //console.log("Cropped Width: " + cropWidth)
-
-          // var cropWidth = ((cameraWidth * (4/8)) - (iconWidth / 2)) - cameraHeight / 8;
-          // const cropOptions = {offset: {x: cameraWidth / 8, y: cameraHeight / 8}, size: {width: 800, height: 1100}, displaySize: {width: 8000, height: 11000}, resizeMode: 'contain'}
-          // //const cropOptions = {offset: {x: cameraWidth / 8, y: cameraHeight / 8}, size: {width: cropWidth, height: cameraHeight}, displaySize: {width: cameraWidth, height: cameraHeight}}
-          // ImageEditor.cropImage(data.uri, cropOptions, (success) => this.setState({
-          //   picture_uri: success,
-          //   pictureTaken: true
-          // })
-          // , () => console.log("Failed"));
-  }
-
   _takePicture =  async function() {
       if (this.camera) {        
-        const options = { quality: 0.5, base64: true, skipProcessing: false, fixOrientation: true, width: 500 };
+        const options = { quality: 0.5, base64: true, skipProcessing: false, fixOrientation: true };
         await this.camera.takePictureAsync(options).then((data) => {
-          var cropWidth = ((cameraWidth * (4/8)) - (iconWidth / 2)) - cameraHeight / 8;
-
-          console.log("Raw Data", data);  
 
           this.setState({
             picture_uri: data.uri,
             pictureTaken: true
-          })
-          console.log("Picture Taken");
+          });
         })
       }
   }
@@ -84,17 +68,18 @@ export default class Camera extends Component<Props>{
 
       console.log("Formatting")
       
-      var rekt = new AWS.Rekognition();
       
       let uid = this.state.user_id;
       let navigate = this.props.navigation;
+      
+      var rekt = new AWS.Rekognition();
       let dis = this;
 
-      rekt.detectText(params, function(err, data) {      
-        if (err) console.log(err, err.stack);
-        else {          
-          console.log("Data Detected")
-          
+      rekt.detectText(params, function(error, data) {      
+        if (error){
+          console.log(error)
+        }
+        else {                    
           var content = _formatOCROutput(data)
           dis.DB._billIDGen(navigate, content);
         }
@@ -190,6 +175,7 @@ const styles = StyleSheet.create({
     height: cameraHeight,
     width: cameraWidth,
   },
+
   cameraIconContainer: {
     flex: 1,
     flexDirection: 'row',
@@ -305,6 +291,8 @@ function _formatOCROutput(data){
   var itemIndex = 0;
   var invalidKeyChars = ['.', '#', '$', '/', '[', ']', '<', '>'];
   var blacklistTerms = ['Total', 'Subtotal', 'Visa', 'Debit', 'GST']
+
+  console.log(TD)
 
   for(var TD_Index=0; TD_Index < TD.length; TD_Index++){
     if(TD[TD_Index].Type == "LINE"){     

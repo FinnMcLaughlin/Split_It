@@ -5,6 +5,9 @@ import { AppRegistry, Platform, StyleSheet } from 'react-native';
 import firebase from '@firebase/app';
 import '@firebase/auth';
 
+var config = {
+    
+};
 
 if (!firebase.apps.length) {
     firebase.initializeApp(config);
@@ -22,6 +25,11 @@ export default class Database extends Component<Props>{
             hostPayPal: ""
         }
     }
+
+    _deleteBill(billID){
+        var _table = `Bills/${billID}`
+        firebase.database().ref(_table).remove();
+    }
     
     _registerUser(email, password, name, paypal_email, context){
         let nav = context;
@@ -38,11 +46,12 @@ export default class Database extends Component<Props>{
             }).then(() => {
                 console.log("User Registered");
                 nav.navigate("Login");
-            }).catch(() => {
+            });
+        })
+        .catch(() => {
                 var err_message = "Error Registering User";
                 console.log(err_message);
-                nav.navigate("Register", err_message);
-            });        
+                nav.navigate("Register", err_message);        
         });
     } //
 
@@ -59,7 +68,7 @@ export default class Database extends Component<Props>{
     } //
 
     _findBillID(billID){
-        return firebase.database().ref(`Rooms/${billID}/content`).once("value");
+        return firebase.database().ref(`Bills/${billID}/content`).once("value");
     } //
 
     _billIDGen(navigate, data, hostID){
@@ -82,9 +91,7 @@ export default class Database extends Component<Props>{
                     navigate.navigate("Results", {ID: billID});
                 })
                 .catch(() => {
-                    var err_message = "Error Creating New Bill"
-                    console.log(err_message);
-                    navigate.navigate("_Error", {err_message: err_message});
+                    console.log("Error Creating New Bill");
                 });
             }
             else{
@@ -95,47 +102,25 @@ export default class Database extends Component<Props>{
     } //
 
     _createNewRoom(billID, data){
-        return firebase.database().ref(`Rooms/${billID}`).set({
+        return firebase.database().ref(`Bills/${billID}`).set({
             content: data
         }).then(() => {
-                firebase.database().ref(`Rooms/${billID}/host`).set({
+                firebase.database().ref(`Bills/${billID}/host`).set({
                 hostID: firebase.auth().currentUser.uid                    
             })
         }).then(() => {
-            firebase.database().ref(`Rooms/${billID}/priceValues`).set({
+            firebase.database().ref(`Bills/${billID}/priceValues`).set({
                 billTotal: "",
                 calculatedTotal: "",
                 remainingBillPrice: ""
             })                   
         }).catch(() => {
-            var err_message = "Error Storing Information into Database"
-            console.log(err_message);
-            navigate.navigate("_Error", {err_message: err_message});
+            console.log("Error Storing Information into Database");
         });
     } //
 
     _getCurrentUserDisplayName(){
-        var userID = firebase.auth().currentUser.uid;
-        const _table = `Users/${userID}`;
-        var userDisplayName = firebase.auth().currentUser.displayName;
-        
-        //Set Authentication display name if one has not been set already
-        //Return current user display name
-        if(userDisplayName == null){
-            firebase.database().ref(_table).on('value', function(result){
-                firebase.auth().currentUser.updateProfile({displayName: result.val().name});
-            }).catch(() => {
-                var err_message = "Error Storing Information into Database"
-                console.log(err_message);
-                navigate.navigate("_Error", {err_message: err_message});
-            });;
-
-            userDisplayName = firebase.auth().currentUser.displayName;
-            return userDisplayName;
-        }
-        else{
-            return userDisplayName;
-        }   
+        return firebase.auth().currentUser.displayName;           
     } //
 
     _getSpecificUserDisplayName(userID){
@@ -143,9 +128,9 @@ export default class Database extends Component<Props>{
         const _table = "Users/" + userID;
         var displayName = "";
                 
-        firebase.database().ref(_table).on('value', function(snapshot){
-            if(snapshot.val().name != undefined){
-                displayName = snapshot.val().name;
+        firebase.database().ref(_table).on('value', function(userInfo){
+            if(userInfo.val().name != undefined){
+                displayName = userInfo.val().name;
             }
         });       
         
@@ -153,7 +138,7 @@ export default class Database extends Component<Props>{
     } //
 
     _initUserBillData(billID, userID){
-        const _table = `Rooms/${billID}/users/${userID}`;
+        const _table = `Bills/${billID}/users/${userID}`;
 
         firebase.database().ref(_table).set({
             finishedChoosing: false,
@@ -162,15 +147,15 @@ export default class Database extends Component<Props>{
     } //
 
     _updateUserBillData(billID, userID, info, value){
-        const _table = `Rooms/${billID}/users/${userID}`;
+        const _table = `Bills/${billID}/users/${userID}`;
 
         firebase.database().ref(_table).update({
             [info]: value 
         });
     } //
 
-    _getHostPaypalAccount(billID, userID, info, value){
-        const host_path = `Rooms/${billID}/host`;
+    _getHostPaypalAccount(billID, userID){
+        const host_path = `Bills/${billID}/host`;
         const user_path = "Users";
         let dis = this;
         
@@ -186,15 +171,13 @@ export default class Database extends Component<Props>{
                 hostPayPalEmail: dis.state.hostPayPal
             });
         }).catch(() => {
-            var err_message = "Error Getting Host Paypal Account"
-            console.log(err_message);
-            navigate.navigate("_Error", {err_message: err_message});
+            console.log("Error Getting Host Paypal Account");
         });
     } //
 
     _setTotalPrice(billID, billTotal){
         //Set initial remaining price calculated using generated item list prices
-        const _table = `Rooms/${billID}/priceValues/billTotal`;
+        const _table = `Bills/${billID}/priceValues/billTotal`;
         
         firebase.database().ref(_table).set({
             value: billTotal.toFixed(2)
@@ -203,7 +186,7 @@ export default class Database extends Component<Props>{
 
     _setCaclulateTotalPrice(billID, calculatedTotal){
         //Set initial remaining price calculated using generated item list prices
-        const _table = `Rooms/${billID}/priceValues/calculatedTotal`;
+        const _table = `Bills/${billID}/priceValues/calculatedTotal`;
         
         firebase.database().ref(_table).set({
             value: calculatedTotal.toFixed(2)
@@ -212,7 +195,7 @@ export default class Database extends Component<Props>{
 
     _setRemainingTotal(billID, remainingTotal){
         //Set initial remaining price calculated using generated item list prices
-        const _table = `Rooms/${billID}/priceValues/remainingBillPrice`;
+        const _table = `Bills/${billID}/priceValues/remainingBillPrice`;
         
         firebase.database().ref(_table).set({
             value: remainingTotal.toFixed(2)
@@ -220,7 +203,7 @@ export default class Database extends Component<Props>{
     } //
 
     _updateRemainingTotal(billID, items){
-        const _table = `Rooms/${billID}/priceValues/calculatedTotal`;
+        const _table = `Bills/${billID}/priceValues/calculatedTotal`;
         let newRemainingBillPrice = 0;
         let chosenItemsTotalPrice = 0;
         let dis = this;
@@ -244,59 +227,58 @@ export default class Database extends Component<Props>{
     } //
 
     _userChooseItem(billID, itemIndex, uid){
-        const _table = `Rooms/${billID}/content/${itemIndex}/data`;
-        var itemChosenBy = [];
+        const _table = `Bills/${billID}/content/${itemIndex}/data`;
 
         //Pull array of UIDs who have chosen the item at itemIndex
         firebase.database().ref(`${_table}/chosenBy`).once('value', function(chosenByData){
-            itemChosenBy = chosenByData.val();     
-        })
-        
-        //If current user is not in the existing array of UIDs, begin adding them to the array
-        if(!itemChosenBy.includes(uid)){
-            //Check if the array consists of an empty string i.e. no current users
-            //If so then put their UID in position 0
-            if(itemChosenBy == ""){
-                itemChosenBy = [`${uid}`]
-            }
-            //If not then push UID to the next position in the array
-            else{
-                itemChosenBy.push(uid);
-            }
+            var itemChosenBy = chosenByData.val();
 
-            //Update the database array    
-            firebase.database().ref(_table).update({
-                chosenBy: itemChosenBy
-            });
-        }
-        //If current user is already in existing array of UIDs, begin removing them from the array 
-        else if(itemChosenBy.includes(uid)){
-            //If their are more UIDs in the array
-            if(itemChosenBy.length > 1){
-                //Check if the user being removed is in the first position of the array
-                //If so then move the user who is last position in the array to the first position
-                if(itemChosenBy.indexOf(uid) == 0){
-                    itemChosenBy[0] = itemChosenBy[length-1];
-                    itemChosenBy.splice(length-1, 1);
+            //If current user is not in the existing array of UIDs, begin adding them to the array
+            if(!itemChosenBy.includes(uid)){
+                //Check if the array consists of an empty string i.e. no current users
+                //If so then put their UID in position 0
+                if(itemChosenBy == ""){
+                    itemChosenBy = [`${uid}`]
                 }
-                //If not then just remove the user from their current position
+                //If not then push UID to the next position in the array
                 else{
-                    itemChosenBy.splice(itemChosenBy.indexOf(uid), 1);
+                    itemChosenBy.push(uid);
                 }
+
+                //Update the database array    
+                firebase.database().ref(_table).update({
+                    chosenBy: itemChosenBy
+                });
             }
-            //If there are no other users in the array, replace the current user with an empty string
-            else{
-                itemChosenBy[itemChosenBy.indexOf(uid)] = "";
+            //If current user is already in existing array of UIDs, begin removing them from the array 
+            else if(itemChosenBy.includes(uid)){
+                //If their are more UIDs in the array
+                if(itemChosenBy.length > 1){
+                    //Check if the user being removed is in the first position of the array
+                    //If so then move the user who is last position in the array to the first position
+                    if(itemChosenBy.indexOf(uid) == 0){
+                        itemChosenBy[0] = itemChosenBy[itemChosenBy.length-1];
+                        itemChosenBy.splice(itemChosenBy.length-1, 1);
+                    }
+                    //If not then just remove the user from their current position
+                    else{
+                        itemChosenBy.splice(itemChosenBy.indexOf(uid), 1);
+                    }
+                }
+                //If there are no other users in the array, replace the current user with an empty string
+                else{
+                    itemChosenBy[itemChosenBy.indexOf(uid)] = "";
+                }
+                //Update the database array            
+                firebase.database().ref(_table).update({
+                    chosenBy: itemChosenBy
+                });
             }
-            //Update the database array    
-            firebase.database().ref(_table).update({
-                chosenBy: itemChosenBy
-            })
-        }
+        })        
     } //
 
     _updateItemInfo(billID, itemIndex, attribute, data){
-        var _table = `Rooms/${billID}/content/${itemIndex}`
+        var _table = `Bills/${billID}/content/${itemIndex}`
 
         if(attribute == "price"){
             _table = `/${_table}/data`

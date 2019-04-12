@@ -9,9 +9,11 @@ import firebase from 'firebase';
 type Props = {};
 
 export default class Register extends Component{
-    static NavigationOptions = {
-        title: 'Register',
-      };
+    static navigationOptions = {
+        headerStyle: {
+            backgroundColor: 'rgb(221, 193, 54)',
+        }
+    };
     
     constructor(props){
         super(props);
@@ -29,6 +31,24 @@ export default class Register extends Component{
 
         if(typeof this.props.navigation.state.params.err_message != undefined){
             this.state.err_message = this.props.navigation.state.params.err_message;
+        }
+    }
+
+    _errorCheck(){
+        if(!this.state.email.includes('@')){
+            this.setState({err_message: "Invalid Email"})
+        }
+        else if(this.state.password.length < 6){
+            this.setState({err_message: "Password's length must be at least 6"})
+        }
+        else if(!this.state.name.length > 0){
+            this.setState({err_message: "No Name Inputted"})
+        }
+        else if(!this.state.paypal_email.includes('@')){
+            this.setState({err_message: "Invalid PayPal Email"})
+        }
+        else{
+            this.DB._registerUser(this.state.email.trim(), this.state.password.trim(), this.state.name.trim(), this.state.paypal_email.trim(), this.props.navigation)
         }
     }
 
@@ -61,13 +81,13 @@ export default class Register extends Component{
                 </View>     
 
                 <View style={styles.textInput_style}>
-                <Text style={{color: "red"}}>{this.state.err_message}</Text>
+                    <Text style={styles.err_style}>{this.state.err_message}</Text>
                 </View>
                             
                     
                 <View style={styles.button_view}>
                 <TouchableOpacity style={styles.button_style}
-                    onPress={() => {this.DB._registerUser(this.state.email, this.state.password, this.state.name, this.state.paypal_email, this.props.navigation)}}>
+                    onPress={() => {this._errorCheck()}}>
                         <Text style={styles.button_style}>Register</Text>
                 </TouchableOpacity>
                 </View>
@@ -112,6 +132,11 @@ const styles = StyleSheet.create({
         fontSize: 25,
         fontFamily: 'Rocco',
         color: 'rgb(251, 113, 5)'
+    },
+    err_style: {
+        fontSize: 15,
+        fontFamily: 'Rocco',
+        color: 'rgb(255, 25, 25)'
     }
 });
 
