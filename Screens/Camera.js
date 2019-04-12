@@ -11,7 +11,6 @@ import { relative } from 'path';
 
 
 var AWS = require('aws-sdk/react-native');
-//AWS Configuration
 
 const cameraWidth = 
 Dimensions.get('screen').width;

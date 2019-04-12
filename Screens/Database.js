@@ -6,7 +6,7 @@ import firebase from '@firebase/app';
 import '@firebase/auth';
 
 var config = {
-    
+
 };
 
 if (!firebase.apps.length) {
